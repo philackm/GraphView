@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: - GraphView
-class GraphView: UIScrollView, UIScrollViewDelegate, GraphViewDrawingDelegate {
+@objc class GraphView: UIScrollView, UIScrollViewDelegate, GraphViewDrawingDelegate {
     
     // MARK: - Public Properties
     // Use these to customise the graph.
@@ -1651,45 +1651,45 @@ private class ReferenceLineDrawingView : UIView {
 
 // MARK: - GraphView Settings Enums
 
-enum GraphViewLineStyle {
+@objc enum GraphViewLineStyle : Int {
     case Straight
     case Smooth
 }
 
-enum GraphViewFillType {
+@objc enum GraphViewFillType : Int  {
     case Solid
     case Gradient
 }
 
-enum GraphViewGradientType {
+@objc enum GraphViewGradientType : Int  {
     case Linear
     case Radial
 }
 
-enum GraphViewDataPointType {
+@objc enum GraphViewDataPointType : Int  {
     case Circle
     case Square
     case Custom
 }
 
-enum GraphViewReferenceLinePosition {
+@objc enum GraphViewReferenceLinePosition : Int  {
     case Left
     case Right
     case Both
 }
 
-enum GraphViewReferenceLineType {
+@objc enum GraphViewReferenceLineType : Int  {
     case Cover
     //case Edge // FUTURE: Implement
 }
 
-enum GraphViewAnimationType {
+@objc enum GraphViewAnimationType : Int  {
     case EaseOut
     case Elastic
     case Custom
 }
 
-enum GraphViewDirection {
+@objc enum GraphViewDirection  : Int {
     case LeftToRight
     case RightToLeft
 }
