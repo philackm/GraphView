@@ -4,6 +4,7 @@
 //
 
 import UIKit
+import ScrollableGraphView
 
 class ViewController: UIViewController {
 

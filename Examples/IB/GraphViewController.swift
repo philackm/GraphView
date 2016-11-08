@@ -4,6 +4,7 @@
 //
 
 import UIKit
+import ScrollableGraphView
 
 class GraphViewController: UIViewController {
     @IBOutlet var graphView: ScrollableGraphView?
