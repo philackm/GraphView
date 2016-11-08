@@ -51,24 +51,24 @@
 
 /* Begin PBXFileReference section */
 		2918399E1C72E6A400753A45 /* GraphView Code Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GraphView Code Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		291839A11C72E6A400753A45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = GraphView/AppDelegate.swift; sourceTree = "<group>"; };
-		291839A31C72E6A400753A45 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = GraphView/ViewController.swift; sourceTree = "<group>"; };
+		291839A11C72E6A400753A45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		291839A31C72E6A400753A45 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		291839A61C72E6A400753A45 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		291839A81C72E6A400753A45 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = GraphView/Assets.xcassets; sourceTree = "<group>"; };
+		291839A81C72E6A400753A45 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Assets.xcassets; sourceTree = "<group>"; };
 		291839AB1C72E6A400753A45 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		291839AD1C72E6A400753A45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = GraphView/Info.plist; sourceTree = "<group>"; };
-		29559B7F1C742D7800E77931 /* UIColor+colorFromHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+colorFromHex.swift"; path = "GraphView/UIColor+colorFromHex.swift"; sourceTree = "<group>"; };
+		29559B7F1C742D7800E77931 /* UIColor+colorFromHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+colorFromHex.swift"; path = "UIColor+colorFromHex.swift"; sourceTree = "<group>"; };
 		46203B431DD1BB05000D7A31 /* GraphView IB Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GraphView IB Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		46203B551DD1BB18000D7A31 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = "Example-IB/AppDelegate.swift"; sourceTree = SOURCE_ROOT; };
-		46203B561DD1BB18000D7A31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "Example-IB/Assets.xcassets"; sourceTree = SOURCE_ROOT; };
-		46203B591DD1BB18000D7A31 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		46203B5B1DD1BB18000D7A31 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
-		46203B5C1DD1BB18000D7A31 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphViewController.swift; path = "Example-IB/GraphViewController.swift"; sourceTree = SOURCE_ROOT; };
-		46203B5D1DD1BB18000D7A31 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Example-IB/Info.plist"; sourceTree = SOURCE_ROOT; };
-		46203B5E1DD1BB18000D7A31 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = "Example-IB/ViewController.swift"; sourceTree = SOURCE_ROOT; };
+		46203B551DD1BB18000D7A31 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		46203B561DD1BB18000D7A31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Assets.xcassets; sourceTree = "<group>"; };
+		46203B591DD1BB18000D7A31 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		46203B5B1DD1BB18000D7A31 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		46203B5C1DD1BB18000D7A31 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GraphViewController.swift; path = GraphViewController.swift; sourceTree = "<group>"; };
+		46203B5D1DD1BB18000D7A31 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Info.plist; sourceTree = "<group>"; };
+		46203B5E1DD1BB18000D7A31 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		46203B781DD1BB64000D7A31 /* ScrollableGraphView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ScrollableGraphView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		46203B7B1DD1BB64000D7A31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		46203B851DD1BB71000D7A31 /* ScrollableGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScrollableGraphView.swift; path = Classes/ScrollableGraphView.swift; sourceTree = SOURCE_ROOT; };
+		46203B851DD1BB71000D7A31 /* ScrollableGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScrollableGraphView.swift; path = ScrollableGraphView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +123,7 @@
 				46203B3E1DD1BAD4000D7A31 /* Code */,
 			);
 			name = Examples;
+			path = Examples;
 			sourceTree = "<group>";
 		};
 		46203B3E1DD1BAD4000D7A31 /* Code */ = {
@@ -137,6 +138,7 @@
 				29559B7F1C742D7800E77931 /* UIColor+colorFromHex.swift */,
 			);
 			name = Code;
+			path = Code;
 			sourceTree = "<group>";
 		};
 		46203B441DD1BB05000D7A31 /* IB */ = {
@@ -151,7 +153,7 @@
 				46203B5E1DD1BB18000D7A31 /* ViewController.swift */,
 			);
 			name = IB;
-			path = "GraphView IB Example";
+			path = IB;
 			sourceTree = "<group>";
 		};
 		46203B791DD1BB64000D7A31 /* Source */ = {
@@ -161,7 +163,7 @@
 				46203B7B1DD1BB64000D7A31 /* Info.plist */,
 			);
 			name = Source;
-			path = ScrollableGraphView;
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -353,7 +355,7 @@
 				291839A61C72E6A400753A45 /* Base */,
 			);
 			name = Main.storyboard;
-			path = GraphView;
+			path = .;
 			sourceTree = "<group>";
 		};
 		291839AA1C72E6A400753A45 /* LaunchScreen.storyboard */ = {
@@ -362,7 +364,7 @@
 				291839AB1C72E6A400753A45 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			path = GraphView;
+			path = .;
 			sourceTree = "<group>";
 		};
 		46203B581DD1BB18000D7A31 /* LaunchScreen.storyboard */ = {
@@ -371,7 +373,7 @@
 				46203B591DD1BB18000D7A31 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			path = "../Example-IB/Base.lproj";
+			path = .;
 			sourceTree = "<group>";
 		};
 		46203B5A1DD1BB18000D7A31 /* Main.storyboard */ = {
@@ -380,7 +382,7 @@
 				46203B5B1DD1BB18000D7A31 /* Base */,
 			);
 			name = Main.storyboard;
-			path = "../Example-IB/Base.lproj";
+			path = .;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -512,7 +514,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				INFOPLIST_FILE = "GraphView IB Example/Info.plist";
+				INFOPLIST_FILE = Examples/IB/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "tfw.GraphView-IB-Example";
@@ -532,7 +534,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				INFOPLIST_FILE = "GraphView IB Example/Info.plist";
+				INFOPLIST_FILE = Examples/IB/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "tfw.GraphView-IB-Example";
@@ -556,7 +558,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = ScrollableGraphView/Info.plist;
+				INFOPLIST_FILE = Source/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -586,7 +588,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = ScrollableGraphView/Info.plist;
+				INFOPLIST_FILE = Source/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
