@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios' last-migration='0800'>
+    <pages>
+        <page name='Dark Graph'/>
+        <page name='Dot Graph'/>
+        <page name='Pink Mountain Graph'/>
+        <page name='Bar Graph'/>
+    </pages>
+</playground>
