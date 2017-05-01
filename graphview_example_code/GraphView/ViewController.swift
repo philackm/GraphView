@@ -5,7 +5,8 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+//implements PointSelectedProtocol now
+class ViewController: UIViewController, PointSelectedProtocol {
 
     var graphView = ScrollableGraphView()
     var currentGraphType = GraphType.dark
@@ -55,6 +56,9 @@ class ViewController: UIViewController {
         case .pink:
             addLabel(withText: "PINK")
             graphView = createPinkMountainGraph(self.view.frame)
+        case .touchable:
+            addLabel(withText: "TOUCHABLE")
+            graphView = createBarGraphTouchable(self.view.frame)
         }
         
         graphView.set(data: data, withLabels: labels)
@@ -186,6 +190,40 @@ class ViewController: UIViewController {
         return graphView
     }
     
+    private func createBarGraphTouchable(_ frame: CGRect) -> ScrollableGraphView {
+        let graphView = ScrollableGraphView(frame:frame)
+        
+        graphView.dataPointType = ScrollableGraphViewDataPointType.circle
+        graphView.shouldDrawBarLayer = true
+        graphView.shouldDrawDataPoint = false
+        
+        graphView.lineColor = UIColor.clear
+        graphView.barWidth = 25
+        graphView.barLineWidth = 1
+        graphView.barLineColor = UIColor.colorFromHex(hexString: "#777777")
+        graphView.barColor = UIColor.colorFromHex(hexString: "#555555")
+        graphView.backgroundFillColor = UIColor.colorFromHex(hexString: "#333333")
+        
+        graphView.referenceLineLabelFont = UIFont.boldSystemFont(ofSize: 8)
+        graphView.referenceLineColor = UIColor.white.withAlphaComponent(0.2)
+        graphView.referenceLineLabelColor = UIColor.white
+        graphView.numberOfIntermediateReferenceLines = 5
+        graphView.dataPointLabelColor = UIColor.white.withAlphaComponent(0.5)
+        
+        graphView.shouldAnimateOnStartup = true
+        graphView.shouldAdaptRange = true
+        graphView.adaptAnimationType = ScrollableGraphViewAnimationType.elastic
+        graphView.animationDuration = 1.5
+        graphView.rangeMax = 50
+        graphView.shouldRangeAlwaysStartAtZero = true
+        
+        graphView.shouldRoundBarCorners = true
+        graphView.shouldCustomizeSelection = true
+        graphView.pointSelectedDelegate = self
+        
+        return graphView
+    }
+    
     private func setupConstraints() {
         
         self.graphView.translatesAutoresizingMaskIntoConstraints = false
@@ -278,6 +316,7 @@ class ViewController: UIViewController {
         case bar
         case dot
         case pink
+        case touchable
         
         mutating func next() {
             switch(self) {
@@ -288,6 +327,8 @@ class ViewController: UIViewController {
             case .dot:
                 self = GraphType.pink
             case .pink:
+                self = GraphType.touchable
+            case .touchable:
                 self = GraphType.dark
             }
         }
@@ -295,6 +336,10 @@ class ViewController: UIViewController {
     
     override var prefersStatusBarHidden : Bool {
         return true
+    }
+    
+    func pointWasSelectedAt(index:Int, label: String, value: Double, location: CGPoint) {
+        print("Point \(index) selected x:\(label) y:\(value) point:\(location)\n")
     }
 }
 
