@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Scrollable-GraphView.xcscheme_^#shared#^_</key>
+		<key>GraphView.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,7 +12,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>8A60239E1EFF70EE00EAD247</key>
+		<key>2918399D1C72E6A400753A45</key>
 		<dict>
 			<key>primary</key>
 			<true/>

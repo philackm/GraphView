@@ -1891,7 +1891,7 @@ private class ReferenceLineDrawingView : UIView {
     }
     
     private func boundingSize(forText text: String) -> CGSize {
-        return (text as NSString).size(withAttributes: [NSAttributedStringKey.font:labelFont])
+        return (text as NSString).size(attributes: [NSFontAttributeName:labelFont])
     }
     
     private func calculateYAxisValue(for point: CGPoint) -> Double {
