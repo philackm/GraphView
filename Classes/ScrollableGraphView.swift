@@ -1,5 +1,11 @@
 import UIKit
 
+// MARK: PointSelectedDelegate
+
+@objc public protocol PointSelectedProtocol {
+    func pointWasSelectedAt(label:String, value:Double, location: CGPoint)
+}
+
 // MARK: - ScrollableGraphView
 @IBDesignable
 @objc open class ScrollableGraphView: UIScrollView, UIScrollViewDelegate, ScrollableGraphViewDrawingDelegate {
@@ -70,7 +76,7 @@ import UIKit
     open var fillType = ScrollableGraphViewFillType.solid
     /// If fillType is set to .Solid then this colour will be used to fill the graph.
     @IBInspectable open var fillColor: UIColor = UIColor.black
-    /// If fillType is set to .Gradient then this will be the starting colour for the gradient.
+    /// If fillType is set to .Gradient then this will  be the starting colour for the gradient.
     @IBInspectable open var fillGradientStartColor: UIColor = UIColor.white
     /// If fillType is set to .Gradient, then this will be the ending colour for the gradient.
     @IBInspectable open var fillGradientEndColor: UIColor = UIColor.black
@@ -224,6 +230,9 @@ import UIKit
     open var dataPointLabelFont: UIFont? = UIFont.systemFont(ofSize: 10)
     /// Used to force the graph to show every n-th dataPoint label
     @IBInspectable open var dataPointLabelsSparsity: Int = 1
+    
+    /// Message will be sent to the delegate on point touched.
+    open weak var pointSelectedDelegate: PointSelectedProtocol?
   
     // MARK: - Private State
     // #####################
@@ -581,9 +590,7 @@ import UIKit
     private func updateOffsetWidths() {
         drawingView.frame.origin.x = offsetWidth
         drawingView.bounds.origin.x = offsetWidth
-        
         gradientLayer?.offset = offsetWidth
-        
         referenceLineView?.frame.origin.x = offsetWidth
     }
     
@@ -600,6 +607,123 @@ import UIKit
         referenceLineView?.set(viewportWidth: viewportWidth, viewportHeight: viewportHeight)
         
         self.contentSize.height = viewportHeight
+    }
+    
+    private let distanceSensitivityFromTouchPoint : CGFloat = 15
+    
+    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
+        //make sure touch exists, make sure delegate is set
+        guard let firstTouch = touches.first, let _ = pointSelectedDelegate else { return }
+        let locationOfTouchPoint = firstTouch.location(in: self)
+        
+        // instead of looping over all points which is inefficent
+        // get | --- (touch area) --- |
+        // get the upper point and the lower point
+        // if it's within the a limit range from either the upper or bottom point then select that point.
+        let leftDataPointIndex = Int(floor((locationOfTouchPoint.x - 50) / 80))
+        let rightDataPointIndex = leftDataPointIndex + 1
+        let lastIndexInGraphPoints = graphPoints.count - 1
+        
+        // user clicks left of left most point
+        if leftDataPointIndex < 0 {
+            
+            // right point only
+            let rightPoint = graphPoints[rightDataPointIndex].location
+            
+            if shouldDrawBarLayer {
+                let barWidthToLeftOfX = rightPoint.x - (barWidth / 2)
+                if locationOfTouchPoint.y < rightPoint.y &&
+                    barWidthToLeftOfX < locationOfTouchPoint.x {
+                    triggerDelegateWith(index: rightDataPointIndex)
+                }
+                
+            } else {
+                // right point only
+                let distanceBetweenUpperPointAndTouch = distance(a: rightPoint, b: locationOfTouchPoint)
+                if distanceBetweenUpperPointAndTouch < distanceSensitivityFromTouchPoint {
+                    triggerDelegateWith(index: rightDataPointIndex)
+                }
+            }
+        // user clicks right of last point
+        } else if rightDataPointIndex > lastIndexInGraphPoints {
+            
+            // left point only
+            let leftPoint = graphPoints[leftDataPointIndex].location
+            
+            if shouldDrawBarLayer {
+                let barWidthToRightOfX = locationOfTouchPoint.x + (barWidth / 2)
+                if locationOfTouchPoint.y < leftPoint.y &&
+                    barWidthToRightOfX > locationOfTouchPoint.x {
+                    triggerDelegateWith(index: leftDataPointIndex)
+                }
+                
+            } else {
+                let distanceBetweenLowerPointAndTouch = distance(a: leftPoint, b: locationOfTouchPoint)
+                
+                if distanceBetweenLowerPointAndTouch < distanceSensitivityFromTouchPoint {
+                    triggerDelegateWith(index: leftDataPointIndex)
+                }
+            }
+            
+        // user clicks neither exception case
+        } else {
+            // left point
+            let leftPoint = graphPoints[leftDataPointIndex].location
+            
+            // right point
+            let rightPoint = graphPoints[rightDataPointIndex].location
+            
+            // hit detection should check the left and the right bar if user tapped there.
+            if shouldDrawBarLayer {
+                
+                // check if the left bar was tapped
+                let barWidthToRightOfX = leftPoint.x + (barWidth / 2)
+                if locationOfTouchPoint.y > leftPoint.y &&
+                    barWidthToRightOfX > locationOfTouchPoint.x {
+                    triggerDelegateWith(index: leftDataPointIndex)
+                }
+                
+                // check if the right bar was tapped
+                let barWidthToLeftOfX = rightPoint.x - (barWidth / 2)
+                if locationOfTouchPoint.y > rightPoint.y &&
+                    barWidthToLeftOfX < locationOfTouchPoint.x {
+                    triggerDelegateWith(index: rightDataPointIndex)
+                }
+                
+            } else {
+                
+                let distanceBetweenLeftPointAndTouch = distance(a: leftPoint, b: locationOfTouchPoint)
+                let distanceBetweenRightPointAndTouch = distance(a: rightPoint, b: locationOfTouchPoint)
+                
+                // user pressed closer to the right point
+                if distanceBetweenRightPointAndTouch < distanceSensitivityFromTouchPoint {
+                    triggerDelegateWith(index: rightDataPointIndex)
+                    
+                    // user pressed closer to the left point
+                } else if distanceBetweenLeftPointAndTouch < distanceSensitivityFromTouchPoint {
+                    triggerDelegateWith(index: leftDataPointIndex)
+                    
+                }
+            }
+        }
+    }
+    
+    private func triggerDelegateWith(index: Int) {
+        
+        guard 0 <= index && index <= (labels.count - 1) else { return }
+        guard 0 <= index && index <= (data.count - 1) else { return }
+        guard let pointDelegate = pointSelectedDelegate else { return }
+        
+        pointDelegate.pointWasSelectedAt(label: labels[index], value: data[index], location: graphPoints[index].location)
+        
+    }
+    
+    private func distance(a: CGPoint, b: CGPoint) -> CGFloat {
+        let xDist = a.x - b.x
+        let yDist = a.y - b.y
+        return CGFloat(sqrt((xDist * xDist) + (yDist * yDist)))
     }
     
     // MARK: - Public Methods
@@ -1155,7 +1279,7 @@ private class LabelPool {
 
 
 // MARK: - GraphPoints and Animation Classes
-private class GraphPoint {
+private class GraphPoint : CustomStringConvertible {
     
     var location = CGPoint(x: 0, y: 0)
     var currentlyAnimatingToPosition = false
@@ -1181,6 +1305,10 @@ private class GraphPoint {
     init(position: CGPoint = CGPoint.zero) {
         x = position.x
         y = position.y
+    }
+    
+    var description: String{
+        return "POINT: x:\(x) y:\(y)\n"
     }
 }
 
