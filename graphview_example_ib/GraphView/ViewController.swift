@@ -6,7 +6,8 @@
 import UIKit
 
 
-class ViewController: UIViewController {
+//Implements PointSelectedProtocol protocol
+class ViewController: UIViewController, PointSelectedProtocol {
     
     var childVC: GraphViewController?
 
@@ -54,6 +55,9 @@ class ViewController: UIViewController {
         vc.didMove(toParentViewController: self)
         
         childVC = vc
+        
+        //TODO: DO THIS PROPERLY, PROBABLY FROM STORYBOARD!!
+        vc.graphView!.pointSelectedDelegate = self
     }
     
     func didTap(_ gesture: UITapGestureRecognizer) {
@@ -136,6 +140,8 @@ class ViewController: UIViewController {
         case bar
         case dot
         case pink
+        case roundTouchable
+        case rectangleTouchable
         
         mutating func next() {
             switch(self) {
@@ -146,7 +152,12 @@ class ViewController: UIViewController {
             case .dot:
                 self = GraphType.pink
             case .pink:
+                self = GraphType.roundTouchable
+            case .roundTouchable:
+                self = GraphType.rectangleTouchable
+            case .rectangleTouchable:
                 self = GraphType.dark
+                
             }
         }
         
@@ -160,6 +171,10 @@ class ViewController: UIViewController {
                 return "Dot"
             case .pink:
                 return "Pink"
+            case .roundTouchable:
+                return "BarRoundTouchable"
+            case .rectangleTouchable:
+                return "BarRectTouchable"
             }
 
         }
@@ -167,6 +182,10 @@ class ViewController: UIViewController {
     
     override var prefersStatusBarHidden : Bool {
         return true
+    }
+    
+    func pointWasSelectedAt(index:Int, label: String, value: Double, location: CGPoint) {
+        print("*** Point \(index) selected x:\(label) y:\(value) point:\(location)\n")
     }
 }
 

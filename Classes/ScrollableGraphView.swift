@@ -1,5 +1,11 @@
 import UIKit
 
+// MARK: PointSelectedDelegate
+
+@objc public protocol PointSelectedProtocol {
+    func pointWasSelectedAt(index:Int, label:String, value:Double, location: CGPoint)
+}
+
 // MARK: - ScrollableGraphView
 @IBDesignable
 @objc open class ScrollableGraphView: UIScrollView, UIScrollViewDelegate, ScrollableGraphViewDrawingDelegate {
@@ -7,6 +13,25 @@ import UIKit
     // MARK: - Public Properties
     // Use these to customise the graph.
     // #################################
+    
+    //Added by Mithun Mathew
+    @IBInspectable open var shouldCustomizeSelection = false;
+    ///Selected index
+    private var selectedIndex:Int = -1;
+    
+//    //TODO: implement the following features too!
+//    /// The width of an individual bar on the graph.
+//    @IBInspectable open var barWidthOnSelection: CGFloat = 10;
+//    /// The actual colour of the bar.
+//    @IBInspectable open var barColorOnSelection: UIColor = UIColor.clear
+//    /// The width of the outline of the bar
+//    @IBInspectable open var barLineWidthOnSelection: CGFloat = 3
+//    /// The colour of the bar outline
+//    @IBInspectable open var barLineColorOnSelection: UIColor = UIColor.white
+//    /// Whether the bars should be drawn with rounded corners
+//    @IBInspectable open var shouldRoundBarCornersOnSelection: Bool = false
+    
+    
     
     // Line Styles
     // ###########
@@ -224,6 +249,9 @@ import UIKit
     open var dataPointLabelFont: UIFont? = UIFont.systemFont(ofSize: 10)
     /// Used to force the graph to show every n-th dataPoint label
     @IBInspectable open var dataPointLabelsSparsity: Int = 1
+    
+    /// Message will be sent to the delegate on point touched.
+    open weak var pointSelectedDelegate: PointSelectedProtocol?
   
     // MARK: - Private State
     // #####################
@@ -332,7 +360,12 @@ import UIKit
         #if TARGET_INTERFACE_BUILDER
             self.offsetWidth = 0
         #else
-        if (direction == .rightToLeft) {
+        var graphSizeExceedsWindow = false
+        if (self.viewportWidth < totalGraphWidth) {
+            graphSizeExceedsWindow = true
+        }
+            
+        if (direction == .rightToLeft && graphSizeExceedsWindow) {
             self.offsetWidth = self.contentSize.width - viewportWidth
         }
             // Otherwise start of all the way to the left.
@@ -586,6 +619,129 @@ import UIKit
         
         referenceLineView?.frame.origin.x = offsetWidth
     }
+
+    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
+        if (graphPoints.count == 0) {
+            return
+        }
+        
+        let distanceSensitivityFromTouchPoint : CGFloat = dataPointSpacing/2
+            
+        //make sure touch exists, make sure delegate is set
+        guard let firstTouch = touches.first else {return}
+        let locationOfTouchPoint = firstTouch.location(in: self)
+        // instead of looping over all points which is inefficent
+        // get | --- (touch area) --- |
+        // get the upper point and the lower point
+        // if it's within the a limit range from either the upper or bottom point then select that point.
+        let leftDataPointIndex = Int(floor((locationOfTouchPoint.x - leftmostPointPadding) / dataPointSpacing))
+        let rightDataPointIndex = leftDataPointIndex + 1
+        let lastIndexInGraphPoints = graphPoints.count - 1
+        
+        // user clicks left of left most point
+        if leftDataPointIndex < 0 {
+            // right point only
+            let leftMostPoint = graphPoints[0].location
+            if shouldDrawBarLayer {
+                let barWidthToLeftOfX = leftMostPoint.x - distanceSensitivityFromTouchPoint
+                if locationOfTouchPoint.y > leftMostPoint.y &&
+                    barWidthToLeftOfX < locationOfTouchPoint.x {
+                    triggerDelegateWith(index: 0)
+                }
+            } else {
+                // right point only
+                let distanceBetweenUpperPointAndTouch = distance(a: leftMostPoint, b: locationOfTouchPoint)
+                if distanceBetweenUpperPointAndTouch < distanceSensitivityFromTouchPoint {
+                    triggerDelegateWith(index: 0)
+                }
+            }
+            
+        // user clicks right of last point
+        } else if rightDataPointIndex > lastIndexInGraphPoints {
+            // left point only
+            let rightMostPoint = graphPoints[graphPoints.count - 1].location
+            
+            if shouldDrawBarLayer {
+                let barWidthToRightOfX = rightMostPoint.x + distanceSensitivityFromTouchPoint
+                if locationOfTouchPoint.y > rightMostPoint.y &&
+                    barWidthToRightOfX > locationOfTouchPoint.x {
+                    triggerDelegateWith(index: (graphPoints.count - 1))
+                }
+            } else {
+                let distanceBetweenLowerPointAndTouch = distance(a: rightMostPoint, b: locationOfTouchPoint)
+                if distanceBetweenLowerPointAndTouch < distanceSensitivityFromTouchPoint {
+                    triggerDelegateWith(index: leftDataPointIndex)
+                }
+            }
+            
+        // user clicks neither exception case
+        } else {
+            // left point
+            let leftPoint = graphPoints[leftDataPointIndex].location
+                // right point
+                let rightPoint = graphPoints[rightDataPointIndex].location
+                // hit detection should check the left and the right bar if user tapped there.
+                if shouldDrawBarLayer {
+                    // check if the left bar was tapped
+                    let barWidthToRightOfX = leftPoint.x + distanceSensitivityFromTouchPoint
+                    if locationOfTouchPoint.y > leftPoint.y &&
+                        barWidthToRightOfX > locationOfTouchPoint.x {
+                        triggerDelegateWith(index: leftDataPointIndex)
+                    }
+                    
+                    // check if the right bar was tapped
+                    let barWidthToLeftOfX = rightPoint.x - distanceSensitivityFromTouchPoint
+                    if locationOfTouchPoint.y > rightPoint.y &&
+                        barWidthToLeftOfX < locationOfTouchPoint.x {
+                        triggerDelegateWith(index: rightDataPointIndex)
+                    }
+                } else {
+                    let distanceBetweenLeftPointAndTouch = distance(a: leftPoint, b: locationOfTouchPoint)
+                    let distanceBetweenRightPointAndTouch = distance(a: rightPoint, b: locationOfTouchPoint)
+                    
+                    // user pressed closer to the right point
+                    if distanceBetweenRightPointAndTouch < distanceSensitivityFromTouchPoint {
+                        triggerDelegateWith(index: rightDataPointIndex)
+                        // user pressed closer to the left point
+                    } else if distanceBetweenLeftPointAndTouch < distanceSensitivityFromTouchPoint {
+                        triggerDelegateWith(index: leftDataPointIndex)
+                    }
+                }
+            }
+        }
+    
+    private func triggerDelegateWith(index: Int) {
+        var selectedLabel:String = ""
+        if (shouldShowLabels) {
+            guard 0 <= index || index > (labels.count - 1) else { return }
+            selectedLabel = labels[index]
+        }
+        
+        guard 0 <= index || index > (data.count - 1) else { return }
+        
+        if (shouldCustomizeSelection) {
+            onSelect(selectedIndex: index)
+        }
+        
+        guard let pointDelegate = pointSelectedDelegate else { return }
+        pointDelegate.pointWasSelectedAt(index: index, label: selectedLabel, value: data[index], location: graphPoints[index].location)
+    }
+    
+    func onSelect(selectedIndex:Int) {
+        self.selectedIndex = selectedIndex
+        
+        updatePaths()
+        updateUI()
+    }
+    
+    private func distance(a: CGPoint, b: CGPoint) -> CGFloat {
+        let xDist = a.x - b.x
+        let yDist = a.y - b.y
+        return CGFloat(sqrt((xDist * xDist) + (yDist * yDist)))
+    }
+    
     
     private func updateFrames() {
         // Drawing view needs to always be the same size as the scrollview.
@@ -975,7 +1131,8 @@ import UIKit
                     layer.zeroYPosition = zeroYPosition
                     // Need to make sure this is set in createLinePath
                     assert (layer.zeroYPosition > 0);
-                    layer.updatePath()
+                    
+                    layer.updatePath(selectedIndex: self.selectedIndex)
                 }
             }
         }
@@ -1155,7 +1312,7 @@ private class LabelPool {
 
 
 // MARK: - GraphPoints and Animation Classes
-private class GraphPoint {
+private class GraphPoint : CustomStringConvertible {
     
     var location = CGPoint(x: 0, y: 0)
     var currentlyAnimatingToPosition = false
@@ -1181,6 +1338,10 @@ private class GraphPoint {
     init(position: CGPoint = CGPoint.zero) {
         x = position.x
         y = position.y
+    }
+    
+    var description: String{
+        return "POINT: x:\(x) y:\(y)\n"
     }
 }
 
@@ -1312,7 +1473,7 @@ private class ScrollableGraphViewDrawingLayer : CAShapeLayer {
         self.bounds.origin.x = offset
     }
     
-    func updatePath() {
+    func updatePath(selectedIndex:Int) {
         fatalError("updatePath needs to be implemented by the subclass")
     }
 }
@@ -1335,32 +1496,65 @@ private class BarDrawingLayer: ScrollableGraphViewDrawingLayer {
         
         self.lineJoin = lineJoin
         self.lineCap = lineCap
+        
+        self.fillRule = kCAFillRuleEvenOdd
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createBarPath(centre: CGPoint) -> UIBezierPath {
+    private func createBarPath(isSelected:Bool, centre: CGPoint) -> UIBezierPath {
         
-        let barWidthOffset: CGFloat = self.barWidth / 2
-        
-        let origin = CGPoint(x: centre.x - barWidthOffset, y: centre.y)
-        let size = CGSize(width: barWidth, height: zeroYPosition - centre.y)
-        let rect = CGRect(origin: origin, size: size)
-        
-        let barPath: UIBezierPath = {
-            if shouldRoundCorners {
-                return UIBezierPath(roundedRect: rect, cornerRadius: barWidthOffset)
-            } else {
-                return UIBezierPath(rect: rect)
-            }
-        }()
-        
-        return barPath
+        if (isSelected) {
+            let barWidthOffset1: CGFloat = self.barWidth / 2
+            let origin1 = CGPoint(x: centre.x - barWidthOffset1, y: centre.y)
+            let size1 = CGSize(width: barWidth, height: zeroYPosition - centre.y)
+            let rect1 = CGRect(origin: origin1, size: size1)
+            
+            let barWidthOffset2: CGFloat = self.barWidth / 3
+            let origin2 = CGPoint(x: centre.x - barWidthOffset2, y: centre.y + barWidthOffset2)
+            let size2 = CGSize(width: 2*barWidthOffset2, height: zeroYPosition - centre.y - (2 * barWidthOffset2))
+            let rect2 = CGRect(origin: origin2, size: size2)
+            
+            let barPath: UIBezierPath = {
+                if shouldRoundCorners {
+                    let path1 = UIBezierPath(roundedRect: rect1, cornerRadius: barWidthOffset1)
+                    if (size2.height > 0) {
+                        let path2 = UIBezierPath(roundedRect: rect2, cornerRadius: barWidthOffset2)
+                        path1.append(path2)
+                    }
+                    return path1
+                } else {
+//                    return UIBezierPath(rect: rect)
+                    let path1 = UIBezierPath(rect: rect1)
+                    let path2 = UIBezierPath(rect: rect2)
+                    path1.append(path2)
+                    return path1
+                }
+            }()
+            
+            return barPath
+        } else {
+            let barWidthOffset: CGFloat = self.barWidth / 2
+            
+            let origin = CGPoint(x: centre.x - barWidthOffset, y: centre.y)
+            let size = CGSize(width: barWidth, height: zeroYPosition - centre.y)
+            let rect = CGRect(origin: origin, size: size)
+            
+            let barPath: UIBezierPath = {
+                if shouldRoundCorners {
+                    return UIBezierPath(roundedRect: rect, cornerRadius: barWidthOffset)
+                } else {
+                    return UIBezierPath(rect: rect)
+                }
+            }()
+            
+            return barPath
+        }
     }
     
-    private func createPath () -> UIBezierPath {
+    private func createPath (selectedIndex:Int) -> UIBezierPath {
         
         barPath.removeAllPoints()
         
@@ -1373,22 +1567,37 @@ private class BarDrawingLayer: ScrollableGraphViewDrawingLayer {
         
         for i in activePointsInterval {
             
+//            print("*** i \(i)")
+            
+//            self.lineWidth = 4
+//            self.strokeColor = UIColor.white.cgColor
+//            self.fillColor = UIColor.clear.cgColor
+//            
+//            self.lineJoin = lineJoin
+//            self.lineCap = lineCap
+//            
             var location = CGPoint.zero
             
             if let pointLocation = self.graphViewDrawingDelegate?.graphPoint(forIndex: i).location {
                 location = pointLocation
             }
             
-            let pointPath = createBarPath(centre: location)
-            barPath.append(pointPath)
+            if (i == selectedIndex) {
+//                print("******* selected i \(i)")
+                let pointPath = createBarPath(isSelected: true, centre: location)
+                barPath.append(pointPath)
+            } else {
+                let pointPath = createBarPath(isSelected: false, centre: location)
+                barPath.append(pointPath)
+            }
         }
         
         return barPath
     }
     
-    override func updatePath() {
+    override func updatePath(selectedIndex:Int) {
         
-        self.path = createPath ().cgPath
+        self.path = createPath (selectedIndex: selectedIndex).cgPath
     }
     
 }
@@ -1413,7 +1622,7 @@ private class LineDrawingLayer : ScrollableGraphViewDrawingLayer {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func updatePath() {
+    override func updatePath(selectedIndex:Int) {
         self.path = graphViewDrawingDelegate?.currentPath().cgPath
     }
 }
@@ -1513,7 +1722,7 @@ private class DataPointDrawingLayer: ScrollableGraphViewDrawingLayer {
         }
     }
     
-    override func updatePath() {
+    override func updatePath(selectedIndex:Int) {
         self.path = createDataPointPath().cgPath
     }
 }
@@ -1556,7 +1765,7 @@ private class GradientDrawingLayer : ScrollableGraphViewDrawingLayer {
         self.mask = gradientMask
     }
     
-    override func updatePath() {
+    override func updatePath(selectedIndex:Int) {
         gradientMask.path = graphViewDrawingDelegate?.currentPath().cgPath
     }
     
@@ -1594,7 +1803,7 @@ private class FillDrawingLayer : ScrollableGraphViewDrawingLayer {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func updatePath() {
+    override func updatePath(selectedIndex:Int) {
         self.path = graphViewDrawingDelegate?.currentPath().cgPath
     }
 }
