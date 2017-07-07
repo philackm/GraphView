@@ -64,7 +64,7 @@ Add ```pod 'ScrollableGraphView'``` to your Podfile and then make sure to ```imp
     let graphView = ScrollableGraphView(frame: someFrame)
     let data: [Double] = [4, 8, 15, 16, 23, 42]
     let labels = ["one", "two", "three", "four", "five", "six"]
-    graphView.setData(data, withLabels: labels)
+    graphView.set(data: data, withLabels: labels)
     ```  
 
 2. Add the ScrollableGraphView to the view hierarchy.
