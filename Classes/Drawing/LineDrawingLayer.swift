@@ -53,22 +53,17 @@ internal class LineDrawingLayer : ScrollableGraphViewDrawingLayer {
         let min = delegate.rangeForActivePoints().min
         zeroYPosition = delegate.calculatePosition(atIndex: 0, value: min).y
         
-        let viewport = delegate.currentViewport()
-        let viewportWidth = viewport.width
-        let viewportHeight = viewport.height
+        //let viewport = delegate.currentViewport()
+        //let viewportWidth = viewport.width
+        //let viewportHeight = viewport.height
         
         // Connect the line to the starting edge if we are filling it.
         if(shouldFill) {
             // Add a line from the base of the graph to the first data point.
             let firstDataPoint = owner.graphPoint(forIndex: activePointsInterval.lowerBound)
-            
             let viewportLeftZero = CGPoint(x: firstDataPoint.location.x - (pointPadding.leftmostPointPadding), y: zeroYPosition)
-            let leftFarEdgeTop = CGPoint(x: firstDataPoint.location.x - (pointPadding.leftmostPointPadding + viewportWidth), y: zeroYPosition)
-            let leftFarEdgeBottom = CGPoint(x: firstDataPoint.location.x - (pointPadding.leftmostPointPadding + viewportWidth), y: viewportHeight)
             
-            currentLinePath.move(to: leftFarEdgeBottom)
-            pathSegmentAdder(leftFarEdgeBottom, leftFarEdgeTop, currentLinePath)
-            pathSegmentAdder(leftFarEdgeTop, viewportLeftZero, currentLinePath)
+            currentLinePath.move(to: CGPoint(x: firstDataPoint.location.x, y: zeroYPosition)) // or viewportHeight to show gradient almost to x-labels
             pathSegmentAdder(viewportLeftZero, CGPoint(x: firstDataPoint.location.x, y: firstDataPoint.location.y), currentLinePath)
         }
         else {
@@ -89,14 +84,9 @@ internal class LineDrawingLayer : ScrollableGraphViewDrawingLayer {
         if(shouldFill) {
             // Add a line from the last data point to the base of the graph.
             let lastDataPoint = owner.graphPoint(forIndex: activePointsInterval.upperBound - 1).location
-            
-            let viewportRightZero = CGPoint(x: lastDataPoint.x + (pointPadding.rightmostPointPadding), y: zeroYPosition)
-            let rightFarEdgeTop = CGPoint(x: lastDataPoint.x + (pointPadding.rightmostPointPadding + viewportWidth), y: zeroYPosition)
-            let rightFarEdgeBottom = CGPoint(x: lastDataPoint.x + (pointPadding.rightmostPointPadding + viewportWidth), y: viewportHeight)
+            let viewportRightZero = CGPoint(x: lastDataPoint.x, y: zeroYPosition) // or viewportHeight to show gradient almost to x-labels
             
             pathSegmentAdder(lastDataPoint, viewportRightZero, currentLinePath)
-            pathSegmentAdder(viewportRightZero, rightFarEdgeTop, currentLinePath)
-            pathSegmentAdder(rightFarEdgeTop, rightFarEdgeBottom, currentLinePath)
         }
         
         return currentLinePath
