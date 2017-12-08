@@ -104,6 +104,13 @@ import UIKit
         }
     }
     
+    deinit {
+        debugPrint("RELASE")
+        for plot in plots{
+            plot.release()
+        }
+    }
+    
     // Active Points & Range Calculation
     private var previousActivePointsInterval: CountableRange<Int> = -1 ..< -1
     private var activePointsInterval: CountableRange<Int> = -1 ..< -1 {

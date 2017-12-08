@@ -39,7 +39,7 @@ open class Plot {
     
     private var graphPoints = [GraphPoint]()
     
-    deinit {
+    func release(){
         displayLink?.invalidate()
     }
     
