@@ -659,6 +659,7 @@ import UIKit
         
         for i in activeInterval.startIndex ..< activeInterval.endIndex {
             let dataForIndexI = dataSource?.value(forPlot: plot, atIndex: i) ?? 0
+            plot.data[i] = dataForIndexI
             dataForInterval.append(dataForIndexI)
         }
         
