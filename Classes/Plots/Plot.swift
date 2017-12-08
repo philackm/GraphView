@@ -6,7 +6,7 @@ open class Plot {
     // The id for this plot. Used when determining which data to give it in the dataSource
     open var identifier: String!
     
-    var graphViewDrawingDelegate: ScrollableGraphViewDrawingDelegate! = nil
+    weak var graphViewDrawingDelegate: ScrollableGraphViewDrawingDelegate? = nil
     
     // Animation Settings
     // ##################
@@ -22,6 +22,8 @@ open class Plot {
             }
         }
     }
+    
+    var data = [Int:Double]()
     /// The animation style.
     open var adaptAnimationType = ScrollableGraphViewAnimationType.easeOut
     /// If adaptAnimationType is set to .Custom, then this is the easing function you would like applied for the animation.
@@ -64,7 +66,7 @@ open class Plot {
             }
         }
         
-        graphViewDrawingDelegate.updatePaths()
+        graphViewDrawingDelegate?.updatePaths()
     }
     
     private func animate(point: GraphPoint, to position: CGPoint, withDelay delay: Double = 0) {
@@ -151,9 +153,10 @@ open class Plot {
             
             let value = range.min
             
-            let position = graphViewDrawingDelegate.calculatePosition(atIndex: i, value: value)
-            let point = GraphPoint(position: position)
-            graphPoints.append(point)
+            if let position = graphViewDrawingDelegate?.calculatePosition(atIndex: i, value: value){
+                let point = GraphPoint(position: position)
+                graphPoints.append(point)
+            }
         }
     }
     
@@ -170,9 +173,10 @@ open class Plot {
             
             let value = data[dataPosition]
             
-            let newPosition = graphViewDrawingDelegate.calculatePosition(atIndex: i, value: value)
-            graphPoints[i].x = newPosition.x
-            graphPoints[i].y = newPosition.y
+            if let newPosition = graphViewDrawingDelegate?.calculatePosition(atIndex: i, value: value){
+                graphPoints[i].x = newPosition.x
+                graphPoints[i].y = newPosition.y
+            }
         }
     }
     
@@ -185,11 +189,12 @@ open class Plot {
             let dataPosition = index
             let value = data[dataPosition]
             
-            let newPosition = graphViewDrawingDelegate.calculatePosition(atIndex: activatedPointIndex, value: value)
-            graphPoints[activatedPointIndex].x = newPosition.x
-            graphPoints[activatedPointIndex].y = newPosition.y
-            
-            index += 1
+            if let newPosition = graphViewDrawingDelegate?.calculatePosition(atIndex: activatedPointIndex, value: value){
+                graphPoints[activatedPointIndex].x = newPosition.x
+                graphPoints[activatedPointIndex].y = newPosition.y
+                
+                index += 1
+            }
         }
     }
     
@@ -200,10 +205,11 @@ open class Plot {
         // For any visible points, kickoff the animation to their new position after the axis' min/max has changed.
         var dataIndex = 0
         for pointIndex in pointsToAnimate {
-            let newPosition = graphViewDrawingDelegate.calculatePosition(atIndex: pointIndex, value: data[dataIndex])
-            let point = graphPoints[pointIndex]
-            animate(point: point, to: newPosition, withDelay: Double(dataIndex) * delay)
-            dataIndex += 1
+            if let newPosition = graphViewDrawingDelegate?.calculatePosition(atIndex: pointIndex, value: data[dataIndex]){
+                let point = graphPoints[pointIndex]
+                animate(point: point, to: newPosition, withDelay: Double(dataIndex) * delay)
+                dataIndex += 1
+            }
         }
     }
     

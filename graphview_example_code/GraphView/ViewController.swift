@@ -114,7 +114,8 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
         
         let linePlot = LinePlot(identifier: "simple") // Identifier should be unique for each plot.
         let referenceLines = ReferenceLines()
-        
+        let dot = ValuePlot(identifier: "simple")
+        graphView.addPlot(plot: dot)
         graphView.addPlot(plot: linePlot)
         graphView.addReferenceLines(referenceLines: referenceLines)
         
@@ -182,6 +183,10 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
         graphView.addPlot(plot: blueDotPlot)
         graphView.addPlot(plot: orangeLinePlot)
         graphView.addPlot(plot: orangeSquarePlot)
+        
+        let dot = ValuePlot(identifier: "multiBlue")
+        dot.adaptAnimationType = ScrollableGraphViewAnimationType.elastic
+        graphView.addPlot(plot: dot)
         
         return graphView
     }
