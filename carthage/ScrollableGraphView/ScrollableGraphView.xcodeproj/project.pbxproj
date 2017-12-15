@@ -26,6 +26,8 @@
 		298BFD581F121BB00062F5C8 /* LabelPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298BFD461F121BB00062F5C8 /* LabelPool.swift */; };
 		298BFD591F121BB00062F5C8 /* ReferenceLines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298BFD471F121BB00062F5C8 /* ReferenceLines.swift */; };
 		298BFD5A1F121BB00062F5C8 /* ScrollableGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 298BFD481F121BB00062F5C8 /* ScrollableGraphView.swift */; };
+		58A6E0061FDA79900047F7E0 /* ValueDrawingLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6E0051FDA79900047F7E0 /* ValueDrawingLayer.swift */; };
+		58A6E0081FDA7D990047F7E0 /* ValuePlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6E0071FDA7D990047F7E0 /* ValuePlot.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +52,8 @@
 		298BFD461F121BB00062F5C8 /* LabelPool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelPool.swift; sourceTree = "<group>"; };
 		298BFD471F121BB00062F5C8 /* ReferenceLines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReferenceLines.swift; sourceTree = "<group>"; };
 		298BFD481F121BB00062F5C8 /* ScrollableGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollableGraphView.swift; sourceTree = "<group>"; };
+		58A6E0051FDA79900047F7E0 /* ValueDrawingLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueDrawingLayer.swift; sourceTree = "<group>"; };
+		58A6E0071FDA7D990047F7E0 /* ValuePlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuePlot.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +116,7 @@
 				298BFD371F121BB00062F5C8 /* LineDrawingLayer.swift */,
 				298BFD381F121BB00062F5C8 /* ReferenceLineDrawingView.swift */,
 				298BFD391F121BB00062F5C8 /* ScrollableGraphViewDrawingLayer.swift */,
+				58A6E0051FDA79900047F7E0 /* ValueDrawingLayer.swift */,
 			);
 			path = Drawing;
 			sourceTree = "<group>";
@@ -124,6 +129,7 @@
 				298BFD3F1F121BB00062F5C8 /* DotPlot.swift */,
 				298BFD401F121BB00062F5C8 /* LinePlot.swift */,
 				298BFD411F121BB00062F5C8 /* Plot.swift */,
+				58A6E0071FDA7D990047F7E0 /* ValuePlot.swift */,
 			);
 			path = Plots;
 			sourceTree = "<group>";
@@ -193,11 +199,12 @@
 		298BFD1D1F121BA10062F5C8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = SGV;
 				TargetAttributes = {
 					298BFD251F121BA10062F5C8 = {
 						CreatedOnToolsVersion = 8.3.3;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -251,6 +258,8 @@
 				298BFD511F121BB00062F5C8 /* GraphPointAnimation.swift in Sources */,
 				298BFD531F121BB00062F5C8 /* DotPlot.swift in Sources */,
 				298BFD5A1F121BB00062F5C8 /* ScrollableGraphView.swift in Sources */,
+				58A6E0061FDA79900047F7E0 /* ValueDrawingLayer.swift in Sources */,
+				58A6E0081FDA7D990047F7E0 /* ValuePlot.swift in Sources */,
 				298BFD501F121BB00062F5C8 /* GraphPoint.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -268,7 +277,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -276,7 +287,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -322,7 +337,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -330,7 +347,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -373,7 +394,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = SGV.ScrollableGraphView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -391,7 +412,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = SGV.ScrollableGraphView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -414,6 +435,7 @@
 				298BFD301F121BA10062F5C8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

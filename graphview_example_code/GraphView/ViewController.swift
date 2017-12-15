@@ -16,7 +16,7 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
     
     // Data for the different plots
     
-    var numberOfDataItems = 29
+    var numberOfDataItems = 5
     
     // Data for graphs with a single plot
     lazy var simpleLinePlotData: [Double] = self.generateRandomData(self.numberOfDataItems, max: 100, shouldIncludeOutliers: false)
@@ -114,7 +114,8 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
         
         let linePlot = LinePlot(identifier: "simple") // Identifier should be unique for each plot.
         let referenceLines = ReferenceLines()
-        
+        let dot = ValuePlot(identifier: "simple")
+        graphView.addPlot(plot: dot)
         graphView.addPlot(plot: linePlot)
         graphView.addReferenceLines(referenceLines: referenceLines)
         
@@ -182,6 +183,10 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
         graphView.addPlot(plot: blueDotPlot)
         graphView.addPlot(plot: orangeLinePlot)
         graphView.addPlot(plot: orangeSquarePlot)
+        
+        let dot = ValuePlot(identifier: "multiBlue")
+        dot.adaptAnimationType = ScrollableGraphViewAnimationType.elastic
+        graphView.addPlot(plot: dot)
         
         return graphView
     }
@@ -509,7 +514,7 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
     
     // Button tap events
     
-    func didTap(_ gesture: UITapGestureRecognizer) {
+    @objc func didTap(_ gesture: UITapGestureRecognizer) {
         
         currentGraphType.next()
         
@@ -553,13 +558,14 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
         setupConstraints()
     }
     
-    func reloadDidTap(_ gesture: UITapGestureRecognizer) {
+    @objc  func reloadDidTap(_ gesture: UITapGestureRecognizer) {
         
         // TODO: Currently changing the number of data items is not supported.
         // It is only possible to change the the actual values of the data before reloading.
         // numberOfDataItems = 30
         
         // data for graphs with a single plot
+        self.numberOfDataItems = Int(arc4random() % 50)
         simpleLinePlotData = self.generateRandomData(self.numberOfDataItems, max: 100, shouldIncludeOutliers: false)
         darkLinePlotData = self.generateRandomData(self.numberOfDataItems, max: 50, shouldIncludeOutliers: true)
         dotPlotData = self.generateRandomData(self.numberOfDataItems, variance: 4, from: 25)
