@@ -16,7 +16,7 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
     
     // Data for the different plots
     
-    var numberOfDataItems = 29
+    var numberOfDataItems = 5
     
     // Data for graphs with a single plot
     lazy var simpleLinePlotData: [Double] = self.generateRandomData(self.numberOfDataItems, max: 100, shouldIncludeOutliers: false)
@@ -565,6 +565,7 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
         // numberOfDataItems = 30
         
         // data for graphs with a single plot
+        self.numberOfDataItems = Int(arc4random() % 50)
         simpleLinePlotData = self.generateRandomData(self.numberOfDataItems, max: 100, shouldIncludeOutliers: false)
         darkLinePlotData = self.generateRandomData(self.numberOfDataItems, max: 50, shouldIncludeOutliers: true)
         dotPlotData = self.generateRandomData(self.numberOfDataItems, variance: 4, from: 25)

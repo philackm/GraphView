@@ -37,7 +37,7 @@ open class Plot {
     private var previousTimestamp: CFTimeInterval = 0
     private var currentTimestamp: CFTimeInterval = 0
     
-    private var graphPoints = [GraphPoint]()
+    internal var graphPoints = [GraphPoint]()
     
     func release(){
         displayLink?.invalidate()
@@ -147,7 +147,6 @@ open class Plot {
         
         animatePlotPointPositions(forPoints: pointsToAnimate, withData: data, withDelay: stagger)
     }
-    
     internal func createPlotPoints(numberOfPoints: Int, range: (min: Double, max: Double)) {
         for i in 0 ..< numberOfPoints {
             
@@ -184,10 +183,12 @@ open class Plot {
     internal func setPlotPointPositions(forNewlyActivatedPoints activatedPoints: [Int], withData data: [Double]) {
         
         var index = 0
+        
         for activatedPointIndex in activatedPoints {
             
             let dataPosition = index
             let value = data[dataPosition]
+        
             
             if let newPosition = graphViewDrawingDelegate?.calculatePosition(atIndex: activatedPointIndex, value: value){
                 graphPoints[activatedPointIndex].x = newPosition.x

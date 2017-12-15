@@ -339,7 +339,7 @@ import UIKit
         guard dataSource.numberOfPoints() > 0 else {
             return
         }
-        
+
         if (isInitialSetup) {
             setup()
             
@@ -367,6 +367,7 @@ import UIKit
             let newActivePointsInterval = calculateActivePointsInterval()
             self.previousActivePointsInterval = self.activePointsInterval
             self.activePointsInterval = newActivePointsInterval
+            
             
             // If adaption is enabled we want to
             if(shouldAdaptRange) {
@@ -462,10 +463,24 @@ import UIKit
     // Limitation: Can only be used when reloading the same number of data points!
     public func reload() {
         stopAnimations()
-        rangeDidChange()
+        resetPoint()
         updateUI()
+        rangeDidChange()
         updatePaths()
         updateLabelsForCurrentInterval()
+    }
+    
+    func resetPoint(){
+        let number = self.dataSource?.numberOfPoints() ?? 0
+        if  number != (self.plots.first?.graphPoints.count ?? 0) {
+            for plot in self.plots {
+                plot.reset()
+                plot.createPlotPoints(numberOfPoints: number, range: self.range)
+                plot.setup()
+            }
+            totalGraphWidth = graphWidth(forNumberOfDataPoints: number)
+            self.contentSize = CGSize(width: totalGraphWidth, height: viewportHeight)
+        }
     }
     
     // The functions for adding plots and reference lines need to be able to add plots
