@@ -31,6 +31,8 @@
 		29A590461F0503BD004D219C /* ReferenceLineDrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A590451F0503BD004D219C /* ReferenceLineDrawingView.swift */; };
 		29A590481F05049F004D219C /* LineDrawingLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A590471F05049F004D219C /* LineDrawingLayer.swift */; };
 		29A5904B1F0509C0004D219C /* Plot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A5904A1F0509C0004D219C /* Plot.swift */; };
+		58A6E00A1FDA7E910047F7E0 /* ValueDrawingLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6E0091FDA7E910047F7E0 /* ValueDrawingLayer.swift */; };
+		58A6E00C1FDA7E9C0047F7E0 /* ValuePlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A6E00B1FDA7E9C0047F7E0 /* ValuePlot.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +62,8 @@
 		29A590451F0503BD004D219C /* ReferenceLineDrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReferenceLineDrawingView.swift; path = ../../Classes/Drawing/ReferenceLineDrawingView.swift; sourceTree = "<group>"; };
 		29A590471F05049F004D219C /* LineDrawingLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LineDrawingLayer.swift; path = ../../Classes/Drawing/LineDrawingLayer.swift; sourceTree = "<group>"; };
 		29A5904A1F0509C0004D219C /* Plot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Plot.swift; path = ../../Classes/Plots/Plot.swift; sourceTree = "<group>"; };
+		58A6E0091FDA7E910047F7E0 /* ValueDrawingLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ValueDrawingLayer.swift; path = ../../Classes/Drawing/ValueDrawingLayer.swift; sourceTree = "<group>"; };
+		58A6E00B1FDA7E9C0047F7E0 /* ValuePlot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ValuePlot.swift; path = ../../Classes/Plots/ValuePlot.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +160,7 @@
 		29A590381F0500F5004D219C /* Drawing */ = {
 			isa = PBXGroup;
 			children = (
+				58A6E0091FDA7E910047F7E0 /* ValueDrawingLayer.swift */,
 				29A5903B1F05030F004D219C /* ScrollableGraphViewDrawingLayer.swift */,
 				29A590471F05049F004D219C /* LineDrawingLayer.swift */,
 				29A5903F1F050378004D219C /* DotDrawingLayer.swift */,
@@ -175,6 +180,7 @@
 				299482EA1F060CBE007BCDCA /* LinePlot.swift */,
 				299482EC1F060CDC007BCDCA /* DotPlot.swift */,
 				299482EE1F060CEA007BCDCA /* BarPlot.swift */,
+				58A6E00B1FDA7E9C0047F7E0 /* ValuePlot.swift */,
 			);
 			name = Plots;
 			sourceTree = "<group>";
@@ -262,6 +268,7 @@
 				29A2477E1F09ED4E00F75511 /* ReferenceLines.swift in Sources */,
 				299482F71F06931F007BCDCA /* GraphPointAnimation.swift in Sources */,
 				299482EB1F060CBE007BCDCA /* LinePlot.swift in Sources */,
+				58A6E00C1FDA7E9C0047F7E0 /* ValuePlot.swift in Sources */,
 				299482F91F069337007BCDCA /* GraphPoint.swift in Sources */,
 				299482EF1F060CEA007BCDCA /* BarPlot.swift in Sources */,
 				299482F41F060FE0007BCDCA /* ScrollableGraphViewDrawingDelegate.swift in Sources */,
@@ -270,6 +277,7 @@
 				291839A41C72E6A400753A45 /* ViewController.swift in Sources */,
 				29559B801C742D7800E77931 /* UIColor+colorFromHex.swift in Sources */,
 				299482ED1F060CDC007BCDCA /* DotPlot.swift in Sources */,
+				58A6E00A1FDA7E910047F7E0 /* ValueDrawingLayer.swift in Sources */,
 				291839A21C72E6A400753A45 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -388,6 +396,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = GraphView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ios.GraphView;
@@ -403,6 +412,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = GraphView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ios.GraphView;

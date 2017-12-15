@@ -96,11 +96,18 @@ import UIKit
     private var labelPool = LabelPool()
     
     // Data Source
-    open var dataSource: ScrollableGraphViewDataSource? {
+    weak open var dataSource: ScrollableGraphViewDataSource? {
         didSet {
             if(plots.count > 0) {
                 reload()
             }
+        }
+    }
+    
+    deinit {
+        debugPrint("RELASE")
+        for plot in plots{
+            plot.release()
         }
     }
     
@@ -659,6 +666,7 @@ import UIKit
         
         for i in activeInterval.startIndex ..< activeInterval.endIndex {
             let dataForIndexI = dataSource?.value(forPlot: plot, atIndex: i) ?? 0
+            plot.data[i] = dataForIndexI
             dataForInterval.append(dataForIndexI)
         }
         
