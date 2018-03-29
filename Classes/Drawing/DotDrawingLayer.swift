@@ -9,7 +9,7 @@ internal class DotDrawingLayer: ScrollableGraphViewDrawingLayer {
     
     private var customDataPointPath: ((_ centre: CGPoint) -> UIBezierPath)?
     
-    init(frame: CGRect, fillColor: UIColor, strokeColor: UIColor, dataPointType: ScrollableGraphViewDataPointType, dataPointSize: CGFloat, customDataPointPath: ((_ centre: CGPoint) -> UIBezierPath)? = nil) {
+    init(frame: CGRect, fillColor: UIColor, strokeColor: UIColor, lineWidth: CGFloat? = nil, dataPointType: ScrollableGraphViewDataPointType, dataPointSize: CGFloat, customDataPointPath: ((_ centre: CGPoint) -> UIBezierPath)? = nil) {
         
         self.dataPointType = dataPointType
         self.dataPointSize = dataPointSize
@@ -19,6 +19,10 @@ internal class DotDrawingLayer: ScrollableGraphViewDrawingLayer {
         
         self.fillColor = fillColor.cgColor
         self.strokeColor = strokeColor.cgColor
+        
+        if let lineWidth = lineWidth {
+            self.lineWidth = lineWidth
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
