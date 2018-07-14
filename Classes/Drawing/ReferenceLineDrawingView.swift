@@ -26,7 +26,7 @@ internal class ReferenceLineDrawingView : UIView {
     private var units: String {
         get {
             if let units = self.settings.referenceLineUnits {
-                return " \(units)"
+                return "\(units)"
             } else {
                 return ""
             }
