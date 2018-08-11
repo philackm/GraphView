@@ -57,6 +57,28 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
     // off many graphs with different plots, we are using one big switch
     // statement.
     func value(forPlot plot: Plot, atIndex pointIndex: Int) -> Double {
+        return dataValue(forPlot: plot, atIndex: pointIndex)
+    }
+    
+    func label(atIndex pointIndex: Int) -> String {
+        // Ensure that you have a label to return for the index
+        return xAxisLabels[pointIndex]
+    }
+    
+    // Uncomment the below to enable plot labels
+//    func plotLabel(forPlot plot: Plot, atIndex pointIndex: Int) -> String? {
+//        return "\(dataValue(forPlot: plot, atIndex: pointIndex))"
+//    }
+//
+//    func plotLabel(shouldShowPlotLabel plot: Plot, atIndex pointIndex: Int) -> Bool {
+//        return true
+//    }
+    
+    func numberOfPoints() -> Int {
+        return numberOfDataItems
+    }
+    
+    func dataValue(forPlot plot: Plot, atIndex pointIndex: Int) -> Double {
         
         switch(plot.identifier) {
             
@@ -87,15 +109,6 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
         default:
             return 0
         }
-    }
-    
-    func label(atIndex pointIndex: Int) -> String {
-        // Ensure that you have a label to return for the index
-        return xAxisLabels[pointIndex]
-    }
-    
-    func numberOfPoints() -> Int {
-        return numberOfDataItems
     }
     
     // Creating Different Kinds of Graphs
