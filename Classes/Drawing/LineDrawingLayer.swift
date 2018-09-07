@@ -48,13 +48,13 @@ internal class LineDrawingLayer : ScrollableGraphViewDrawingLayer {
         
         let activePointsInterval = delegate.intervalForActivePoints()
         
-        let pointPadding = delegate.paddingForPoints()
+        _ = delegate.paddingForPoints()
         
         let min = delegate.rangeForActivePoints().min
         zeroYPosition = delegate.calculatePosition(atIndex: 0, value: min).y
         
         let viewport = delegate.currentViewport()
-        let viewportWidth = viewport.width
+        _ = viewport.width
         let viewportHeight = viewport.height
         
         // Connect the line to the starting edge if we are filling it.

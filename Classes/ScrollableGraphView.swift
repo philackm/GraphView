@@ -254,6 +254,18 @@ import UIKit
         // Set the first active points interval. These are the points that are visible when the view loads.
         self.activePointsInterval = initialActivePointsInterval
     }
+
+    func forceReload(withStaggerValue stagger: Double = 0.2) {
+        for plot in plots {
+            let dataForPointsToAnimate = getData(forPlot: plot, andActiveInterval: activePointsInterval)
+            plot.reloadAnimations(
+                    forPoints: activePointsInterval,
+                    withData: dataForPointsToAnimate,
+                    withStaggerValue: stagger,
+                    withHeight: self.viewportHeight
+            )
+        }
+    }
     
     // TODO in 4.1: Plot layer ordering.
     // TODO in 4.1: Plot removal.

@@ -87,7 +87,16 @@ open class Plot {
         animation.delay = delay
         enqueue(animation: animation)
     }
-    
+
+    private func reloadableAnimate(point: GraphPoint, withDelay delay: Double = 0, withHeight height: CGFloat) {
+        let currentPoint = CGPoint(x: point.x, y: point.y)
+        let animation = GraphPointAnimation(fromPoint: CGPoint(x: point.x, y: height), toPoint: currentPoint, forGraphPoint: point)
+        animation.animationEasing = getAnimationEasing()
+        animation.duration = animationDuration
+        animation.delay = delay
+        enqueue(animation: animation)
+    }
+
     private func getAnimationEasing() -> (Double) -> Double {
         switch(self.adaptAnimationType) {
         case .elastic:
@@ -152,6 +161,11 @@ open class Plot {
         
         return dt
     }
+
+    internal func reloadAnimations(forPoints pointsToAnimate: CountableRange<Int>, withData data: [Double], withStaggerValue stagger: Double, withHeight height: CGFloat) {
+
+        reloadableAnimatePlotPointPositions(forPoints: pointsToAnimate, withData: data, withDelay: stagger, withHeight: height)
+    }
     
     internal func startAnimations(forPoints pointsToAnimate: CountableRange<Int>, withData data: [Double], withStaggerValue stagger: Double) {
         
@@ -215,6 +229,17 @@ open class Plot {
             let newPosition = graphViewDrawingDelegate.calculatePosition(atIndex: pointIndex, value: data[dataIndex])
             let point = graphPoints[pointIndex]
             animate(point: point, to: newPosition, withDelay: Double(dataIndex) * delay)
+            dataIndex += 1
+        }
+    }
+
+    internal func reloadableAnimatePlotPointPositions(forPoints pointsToAnimate: CountableRange<Int>, withData data: [Double], withDelay delay: Double, withHeight height: CGFloat) {
+        // For any visible points, kickoff the animation to their new position after the axis' min/max has changed.
+        var dataIndex = 0
+        for pointIndex in pointsToAnimate {
+            _ = graphViewDrawingDelegate.calculatePosition(atIndex: pointIndex, value: data[dataIndex])
+            let point = graphPoints[pointIndex]
+            reloadableAnimate(point: point, withDelay: Double(dataIndex) * delay, withHeight: height)
             dataIndex += 1
         }
     }
