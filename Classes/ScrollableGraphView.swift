@@ -94,7 +94,8 @@ import UIKit
     // Labels
     private var labelsView = UIView()
     private var labelPool = LabelPool()
-    
+    private var plotLabelPool = [LabelPool]()
+
     // Data Source
     open var dataSource: ScrollableGraphViewDataSource? {
         didSet {
@@ -472,6 +473,7 @@ import UIKit
     private func addPlotToGraph(plot: Plot, activePointsInterval: CountableRange<Int>) {
         plot.graphViewDrawingDelegate = self
         self.plots.append(plot)
+        self.plotLabelPool.append(LabelPool())
         initPlot(plot: plot, activePointsInterval: activePointsInterval)
         startAnimations(withStaggerValue: 0.15)
     }
@@ -702,6 +704,7 @@ import UIKit
                 let deactivatedLabelPoints = filterPointsForLabels(fromPoints: deactivatedPoints)
                 let activatedLabelPoints = filterPointsForLabels(fromPoints: activatedPoints)
                 updateLabels(deactivatedPoints: deactivatedLabelPoints, activatedPoints: activatedLabelPoints)
+                updatePlotLabels(deactivatedPoints: deactivatedLabelPoints, activatedPoints: activatedLabelPoints)
             }
         }
     }
@@ -826,7 +829,55 @@ import UIKit
             labelsView.addSubview(label)
         }
     }
-    
+
+    private func updatePlotLabels(deactivatedPoints: [Int], activatedPoints: [Int]) {
+        guard let dataSource = self.dataSource else {
+            return
+        }
+
+        for (index, plot) in plots.enumerated() {
+            let labelPool = plotLabelPool[index]
+
+            // Disable any labels for the deactivated points.
+            for point in deactivatedPoints {
+                labelPool.deactivateLabel(forPointIndex: point)
+            }
+
+            // Grab an unused label and update it to the right position for the newly activated poitns
+            for point in activatedPoints {
+                guard let plotLabelText = dataSource.plotLabel(forPlot: plot, atIndex: point) else {
+                    continue
+                }
+                let label = labelPool.activateLabel(forPointIndex: point)
+                label.text = plotLabelText
+                label.isHidden = !dataSource.plotLabel(shouldShowPlotLabel: plot, atIndex: point)
+                label.textColor = plot.labelColor
+                label.font = plot.labelFont
+
+                label.sizeToFit()
+
+                let position = calculatePosition(atIndex: point, value: dataSource.value(forPlot: plot, atIndex: point))
+
+                label.frame.origin.x = position.x - label.frame.width / 2
+                label.frame.origin.y = position.y - label.frame.height - plot.labelVerticalOffset
+                label.alpha = 0.0
+
+                UIView.animate(
+                        withDuration: plot.animationDuration,
+                        delay: 0.0,
+                        options: plot.labelAnimationOptions,
+                        animations: {
+                            label.alpha = 1.0
+                        }
+                )
+
+                _ = labelsView.subviews.filter { $0.frame.origin == label.frame.origin }.map { $0.removeFromSuperview() }
+
+                labelsView.addSubview(label)
+            }
+        }
+    }
+
     private func updateLabelsForCurrentInterval() {
         // Have to ensure that the labels are added if we are supposed to be showing them.
         if let ref = self.referenceLines {
@@ -839,6 +890,7 @@ import UIKit
                 
                 let filteredPoints = filterPointsForLabels(fromPoints: activatedPoints)
                 updateLabels(deactivatedPoints: filteredPoints, activatedPoints: filteredPoints)
+                updatePlotLabels(deactivatedPoints: filteredPoints, activatedPoints: filteredPoints)
             }
         }
     }
