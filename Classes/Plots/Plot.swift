@@ -26,7 +26,19 @@ open class Plot {
     open var adaptAnimationType = ScrollableGraphViewAnimationType.easeOut
     /// If adaptAnimationType is set to .Custom, then this is the easing function you would like applied for the animation.
     open var customAnimationEasingFunction: ((_ t: Double) -> Double)?
-    
+
+    // Labels
+    // #####################
+
+    /// The font to be used for the value label.
+    open var labelFont = UIFont.systemFont(ofSize: 8)
+    /// The colour of the value label font.
+    open var labelColor: UIColor = UIColor.white
+    /// How far to offset the vertical position of the label.
+    open var labelVerticalOffset: CGFloat = 10
+    /// Label appearance animation
+    open var labelAnimationOptions: UIViewAnimationOptions = [.curveEaseIn]
+
     // Private Animation State
     // #######################
     
