@@ -46,7 +46,7 @@ open class Plot {
     private var displayLink: CADisplayLink!
     private var previousTimestamp: CFTimeInterval = 0
     private var currentTimestamp: CFTimeInterval = 0
-    
+
     private var graphPoints = [GraphPoint]()
     
     deinit {
@@ -88,13 +88,14 @@ open class Plot {
         enqueue(animation: animation)
     }
 
-    private func reloadableAnimate(point: GraphPoint, withDelay delay: Double = 0, withHeight height: CGFloat) {
-        let currentPoint = CGPoint(x: point.x, y: point.y)
-        let animation = GraphPointAnimation(fromPoint: CGPoint(x: point.x, y: height), toPoint: currentPoint, forGraphPoint: point)
+    private func reloadableAnimate(point: GraphPoint, withDelay delay: Double = 0,
+                                   completion: (() -> Void)? = nil) {
+        let animation = GraphPointAnimation(fromPoint: point.originalPoint, toPoint: point.location, forGraphPoint: point)
         animation.animationEasing = getAnimationEasing()
         animation.duration = animationDuration
         animation.delay = delay
         enqueue(animation: animation)
+        completion?()
     }
 
     private func getAnimationEasing() -> (Double) -> Double {
@@ -133,6 +134,22 @@ open class Plot {
             displayLink.isPaused = true
         }
     }
+
+    private var originalPoints: [CGPoint] = []
+
+    func resetAnimatedPositions(with pointsToAnimate: CountableRange<Int>) {
+        self.dequeueAllAnimations()
+        for point in pointsToAnimate {
+            if originalPoints.indices.contains(point) {
+                graphPoints[point].x = self.originalPoints[point].x
+                graphPoints[point].y = self.originalPoints[point].y
+            }
+        }
+
+        for point in pointsToAnimate {
+            self.originalPoints.append(graphPoints[point].location)
+        }
+    }
     
     internal func dequeueAllAnimations() {
         
@@ -162,9 +179,14 @@ open class Plot {
         return dt
     }
 
-    internal func reloadAnimations(forPoints pointsToAnimate: CountableRange<Int>, withData data: [Double], withStaggerValue stagger: Double, withHeight height: CGFloat) {
+    internal func reloadAnimations(forPoints pointsToAnimate: CountableRange<Int>, withData data: [Double],
+                                   withStaggerValue stagger: Double,
+                                   completion: (() -> Void)? = nil) {
 
-        reloadableAnimatePlotPointPositions(forPoints: pointsToAnimate, withData: data, withDelay: stagger, withHeight: height)
+        reloadableAnimatePlotPointPositions(
+                forPoints: pointsToAnimate, withData: data,
+                withDelay: stagger, completion: completion
+        )
     }
     
     internal func startAnimations(forPoints pointsToAnimate: CountableRange<Int>, withData data: [Double], withStaggerValue stagger: Double) {
@@ -233,13 +255,19 @@ open class Plot {
         }
     }
 
-    internal func reloadableAnimatePlotPointPositions(forPoints pointsToAnimate: CountableRange<Int>, withData data: [Double], withDelay delay: Double, withHeight height: CGFloat) {
-        // For any visible points, kickoff the animation to their new position after the axis' min/max has changed.
+    internal func reloadableAnimatePlotPointPositions(forPoints pointsToAnimate: CountableRange<Int>,
+                                                      withData data: [Double], withDelay delay: Double,
+                                                      completion: (() -> Void)? = nil) {
         var dataIndex = 0
+        let completion: (() -> Void)? = {
+            completion?()
+        }
         for pointIndex in pointsToAnimate {
-            _ = graphViewDrawingDelegate.calculatePosition(atIndex: pointIndex, value: data[dataIndex])
-            let point = graphPoints[pointIndex]
-            reloadableAnimate(point: point, withDelay: Double(dataIndex) * delay, withHeight: height)
+            reloadableAnimate(
+                    point: graphPoints[pointIndex],
+                    withDelay: Double(dataIndex) * delay,
+                    completion: pointIndex == pointsToAnimate.last ? completion : nil
+            )
             dataIndex += 1
         }
     }

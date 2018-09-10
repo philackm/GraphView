@@ -257,13 +257,17 @@ import UIKit
 
     func forceReload(withStaggerValue stagger: Double = 0.2) {
         for plot in plots {
+            plot.resetAnimatedPositions(with: activePointsInterval)
             let dataForPointsToAnimate = getData(forPlot: plot, andActiveInterval: activePointsInterval)
             plot.reloadAnimations(
                     forPoints: activePointsInterval,
                     withData: dataForPointsToAnimate,
                     withStaggerValue: stagger,
-                    withHeight: self.viewportHeight
+                    completion: { [unowned self] in
+                        self.activePointsDidChange()
+                    }
             )
+
         }
     }
     
