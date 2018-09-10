@@ -255,7 +255,7 @@ import UIKit
         self.activePointsInterval = initialActivePointsInterval
     }
 
-    func forceReload(withStaggerValue stagger: Double = 0.2) {
+    open func forceReload(withStaggerValue stagger: Double = 0.2) {
         for plot in plots {
             plot.resetAnimatedPositions(with: activePointsInterval)
             let dataForPointsToAnimate = getData(forPlot: plot, andActiveInterval: activePointsInterval)
