@@ -90,7 +90,7 @@ open class Plot {
 
     private func reloadableAnimate(point: GraphPoint, withDelay delay: Double = 0,
                                    completion: (() -> Void)? = nil) {
-        let animation = GraphPointAnimation(fromPoint: point.originalPoint, toPoint: point.location, forGraphPoint: point)
+        let animation = GraphPointAnimation(fromPoint: point.location, toPoint: point.originalPoint, forGraphPoint: point)
         animation.animationEasing = getAnimationEasing()
         animation.duration = animationDuration
         animation.delay = delay
@@ -135,20 +135,13 @@ open class Plot {
         }
     }
 
-    private var originalPoints: [CGPoint] = []
-
-    func resetAnimatedPositions(with pointsToAnimate: CountableRange<Int>) {
+    func resetAnimatedPositions(with pointsToAnimate: CountableRange<Int>, minY: CGFloat) {
         self.dequeueAllAnimations()
-        for point in pointsToAnimate {
-            if originalPoints.indices.contains(point) {
-                graphPoints[point].x = self.originalPoints[point].x
-                graphPoints[point].y = self.originalPoints[point].y
-            }
-        }
 
         for point in pointsToAnimate {
-            self.originalPoints.append(graphPoints[point].location)
+            graphPoints[point].y = minY
         }
+        graphViewDrawingDelegate.updatePaths()
     }
     
     internal func dequeueAllAnimations() {
@@ -258,17 +251,15 @@ open class Plot {
     internal func reloadableAnimatePlotPointPositions(forPoints pointsToAnimate: CountableRange<Int>,
                                                       withData data: [Double], withDelay delay: Double,
                                                       completion: (() -> Void)? = nil) {
-        var dataIndex = 0
-        let completion: (() -> Void)? = {
-            completion?()
-        }
-        for pointIndex in pointsToAnimate {
+
+        for (dataIndex, pointIndex) in pointsToAnimate.enumerated() {
+            graphPoints[pointIndex].originalPoint = graphViewDrawingDelegate
+                .calculatePosition(atIndex: pointIndex, value: data[dataIndex])
             reloadableAnimate(
                     point: graphPoints[pointIndex],
                     withDelay: Double(dataIndex) * delay,
                     completion: pointIndex == pointsToAnimate.last ? completion : nil
             )
-            dataIndex += 1
         }
     }
     

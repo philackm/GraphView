@@ -23,7 +23,7 @@ internal class GraphPoint {
         }
     }
 
-    let originalPoint: CGPoint
+    var originalPoint: CGPoint
     
     init(position: CGPoint = CGPoint.zero) {
         originalPoint = position

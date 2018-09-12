@@ -572,8 +572,9 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
         
         // update labels
         xAxisLabels = self.generateSequentialLabels(self.numberOfDataItems, text: "MAR")
-        
-        graphView.reload()
+
+//        graphView.contentOffset.x = 400
+        graphView.forceReload()
     }
     
     // Data Generation
@@ -653,6 +654,14 @@ class ViewController: UIViewController, ScrollableGraphViewDataSource {
     
     override var prefersStatusBarHidden : Bool {
         return true
+    }
+
+    func plotLabel(shouldShowPlotLabel plot: Plot, atIndex pointIndex: Int) -> Bool {
+        return true
+    }
+
+    func plotLabel(forPlot plot: Plot, atIndex pointIndex: Int) -> String? {
+        return "123"
     }
 }
 
