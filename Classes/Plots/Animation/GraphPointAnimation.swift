@@ -19,7 +19,7 @@ internal class GraphPointAnimation : Equatable {
     
     static private var animationsCreated = 0
     
-    init(fromPoint: CGPoint, toPoint: CGPoint, forGraphPoint graphPoint: GraphPoint, forKey key: String = "animation\(animationsCreated)") {
+    init(fromPoint: CGPoint, toPoint: CGPoint, forGraphPoint graphPoint: GraphPoint? = nil, forKey key: String = "animation\(animationsCreated)") {
         self.startingPoint = fromPoint
         self.endingPoint = toPoint
         self.animationKey = key

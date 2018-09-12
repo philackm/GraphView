@@ -26,7 +26,19 @@ open class Plot {
     open var adaptAnimationType = ScrollableGraphViewAnimationType.easeOut
     /// If adaptAnimationType is set to .Custom, then this is the easing function you would like applied for the animation.
     open var customAnimationEasingFunction: ((_ t: Double) -> Double)?
-    
+
+    // Labels
+    // #####################
+
+    /// The font to be used for the value label.
+    open var labelFont = UIFont.systemFont(ofSize: 8)
+    /// The colour of the value label font.
+    open var labelColor: UIColor = UIColor.white
+    /// How far to offset the vertical position of the label.
+    open var labelVerticalOffset: CGFloat = 10
+    /// Label appearance animation
+    open var labelAnimationOptions: UIViewAnimationOptions = [.curveEaseIn]
+
     // Private Animation State
     // #######################
     
@@ -34,7 +46,7 @@ open class Plot {
     private var displayLink: CADisplayLink!
     private var previousTimestamp: CFTimeInterval = 0
     private var currentTimestamp: CFTimeInterval = 0
-    
+
     private var graphPoints = [GraphPoint]()
     
     deinit {
@@ -75,7 +87,17 @@ open class Plot {
         animation.delay = delay
         enqueue(animation: animation)
     }
-    
+
+    private func reloadableAnimate(point: GraphPoint, withDelay delay: Double = 0,
+                                   completion: (() -> Void)? = nil) {
+        let animation = GraphPointAnimation(fromPoint: point.location, toPoint: point.originalPoint, forGraphPoint: point)
+        animation.animationEasing = getAnimationEasing()
+        animation.duration = animationDuration
+        animation.delay = delay
+        enqueue(animation: animation)
+        completion?()
+    }
+
     private func getAnimationEasing() -> (Double) -> Double {
         switch(self.adaptAnimationType) {
         case .elastic:
@@ -112,6 +134,15 @@ open class Plot {
             displayLink.isPaused = true
         }
     }
+
+    func resetAnimatedPositions(with pointsToAnimate: CountableRange<Int>, minY: CGFloat) {
+        self.dequeueAllAnimations()
+
+        for point in pointsToAnimate {
+            graphPoints[point].y = minY
+        }
+        graphViewDrawingDelegate.updatePaths()
+    }
     
     internal func dequeueAllAnimations() {
         
@@ -139,6 +170,16 @@ open class Plot {
         }
         
         return dt
+    }
+
+    internal func reloadAnimations(forPoints pointsToAnimate: CountableRange<Int>, withData data: [Double],
+                                   withStaggerValue stagger: Double,
+                                   completion: (() -> Void)? = nil) {
+
+        reloadableAnimatePlotPointPositions(
+                forPoints: pointsToAnimate, withData: data,
+                withDelay: stagger, completion: completion
+        )
     }
     
     internal func startAnimations(forPoints pointsToAnimate: CountableRange<Int>, withData data: [Double], withStaggerValue stagger: Double) {
@@ -204,6 +245,21 @@ open class Plot {
             let point = graphPoints[pointIndex]
             animate(point: point, to: newPosition, withDelay: Double(dataIndex) * delay)
             dataIndex += 1
+        }
+    }
+
+    internal func reloadableAnimatePlotPointPositions(forPoints pointsToAnimate: CountableRange<Int>,
+                                                      withData data: [Double], withDelay delay: Double,
+                                                      completion: (() -> Void)? = nil) {
+
+        for (dataIndex, pointIndex) in pointsToAnimate.enumerated() {
+            graphPoints[pointIndex].originalPoint = graphViewDrawingDelegate
+                .calculatePosition(atIndex: pointIndex, value: data[dataIndex])
+            reloadableAnimate(
+                    point: graphPoints[pointIndex],
+                    withDelay: Double(dataIndex) * delay,
+                    completion: pointIndex == pointsToAnimate.last ? completion : nil
+            )
         }
     }
     

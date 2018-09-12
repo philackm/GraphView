@@ -44,7 +44,7 @@ internal class GradientDrawingLayer : ScrollableGraphViewDrawingLayer {
     }
     
     override func updatePath() {
-        gradientMask.path = lineDrawingLayer.createLinePath().cgPath
+        gradientMask.path = lineDrawingLayer.createLinePath(closed: true).cgPath
     }
     
     override func draw(in ctx: CGContext) {

@@ -94,7 +94,9 @@ import UIKit
     // Labels
     private var labelsView = UIView()
     private var labelPool = LabelPool()
-    
+    private var plotLabelPool = [LabelPool]()
+    private var plotLabels = [UILabel]()
+
     // Data Source
     weak open var dataSource: ScrollableGraphViewDataSource? {
         didSet {
@@ -160,7 +162,7 @@ import UIKit
     }
     
     private func setup() {
-        
+
         clipsToBounds = true
         isCurrentlySettingUp = true
         
@@ -258,6 +260,29 @@ import UIKit
         
         // Set the first active points interval. These are the points that are visible when the view loads.
         self.activePointsInterval = initialActivePointsInterval
+    }
+
+    open func forceReload(withStaggerValue stagger: Double = 0.15) {
+        // Without range adapting
+        let newActivePointsInterval = calculateActivePointsInterval()
+        self.previousActivePointsInterval = self.activePointsInterval
+        self.activePointsInterval = newActivePointsInterval
+
+        for plot in plots {
+            plot.resetAnimatedPositions(with: activePointsInterval, minY: zeroYPosition)
+            let completion = plot.identifier == plots.last?.identifier ?
+                { [unowned self] in
+                    self.activePointsDidChange(shouldAnimatePools: true)
+                } :
+                nil
+
+            plot.reloadAnimations(
+                    forPoints: activePointsInterval,
+                    withData: getData(forPlot: plot, andActiveInterval: activePointsInterval),
+                    withStaggerValue: stagger,
+                    completion: completion
+            )
+        }
     }
     
     // TODO in 4.1: Plot layer ordering.
@@ -478,6 +503,7 @@ import UIKit
     private func addPlotToGraph(plot: Plot, activePointsInterval: CountableRange<Int>) {
         plot.graphViewDrawingDelegate = self
         self.plots.append(plot)
+        self.plotLabelPool.append(LabelPool())
         initPlot(plot: plot, activePointsInterval: activePointsInterval)
         startAnimations(withStaggerValue: 0.15)
     }
@@ -687,7 +713,7 @@ import UIKit
     // ############
     
     // If the active points (the points we can actually see) change, then we need to update the path.
-    private func activePointsDidChange() {
+    private func activePointsDidChange(shouldAnimatePools: Bool = false) {
         
         let deactivatedPoints = determineDeactivatedPoints()
         let activatedPoints = determineActivatedPoints()
@@ -702,6 +728,11 @@ import UIKit
         }
         
         updatePaths()
+
+        updatePlotLabels(
+            deactivatedPoints: deactivatedPoints,
+            activatedPoints: Array(activePointsInterval),
+            shouldAnimatePools: shouldAnimatePools || isInitialSetup)
         
         if let ref = self.referenceLines {
             if(ref.shouldShowLabels) {
@@ -727,6 +758,8 @@ import UIKit
         }
         
         referenceLineView?.set(range: range)
+
+        updateLabelsForCurrentInterval()
     }
     
     private func viewportDidChange() {
@@ -832,21 +865,71 @@ import UIKit
             labelsView.addSubview(label)
         }
     }
-    
+
+    private func updatePlotLabels(deactivatedPoints: [Int], activatedPoints: [Int], shouldAnimatePools: Bool = false) {
+        plotLabels.forEach { $0.removeFromSuperview() }
+        guard let dataSource = self.dataSource else {
+            return
+        }
+
+        for (index, plot) in plots.enumerated() {
+            let labelPool = plotLabelPool[index]
+
+            // Disable any labels for the deactivated points.
+            for point in deactivatedPoints {
+                labelPool.deactivateLabel(forPointIndex: point)
+            }
+
+            // Grab an unused label and update it to the right position for the newly activated poitns
+            for point in activatedPoints {
+                guard let plotLabelText = dataSource.plotLabel(forPlot: plot, atIndex: point) else {
+                    continue
+                }
+                let label = labelPool.activateLabel(forPointIndex: point)
+                label.text = plotLabelText
+                label.isHidden = !dataSource.plotLabel(shouldShowPlotLabel: plot, atIndex: point)
+                label.textColor = plot.labelColor
+                label.font = plot.labelFont
+
+                label.sizeToFit()
+
+                let position = calculatePosition(atIndex: point, value: dataSource.value(forPlot: plot, atIndex: point))
+
+                label.frame.origin.x = position.x - label.frame.width / 2
+                label.frame.origin.y = position.y - label.frame.height - plot.labelVerticalOffset
+                if shouldAnimatePools {
+                    label.alpha = 0.0
+
+                    UIView.animate(
+                            withDuration: plot.animationDuration,
+                            delay: 0.0,
+                            options: plot.labelAnimationOptions,
+                            animations: {
+                                label.alpha = 1.0
+                            }
+                    )
+                } else {
+                    label.alpha = 1.0
+                }
+
+                _ = labelsView.subviews.filter { $0.frame.origin == label.frame.origin }.map { $0.removeFromSuperview() }
+                plotLabels.append(label)
+                labelsView.addSubview(label)
+            }
+        }
+    }
+
     private func updateLabelsForCurrentInterval() {
         // Have to ensure that the labels are added if we are supposed to be showing them.
+        let filteredPoints = filterPointsForLabels(fromPoints: Array(activePointsInterval))
+
         if let ref = self.referenceLines {
             if(ref.shouldShowLabels) {
-                
-                var activatedPoints: [Int] = []
-                for i in activePointsInterval {
-                    activatedPoints.append(i)
-                }
-                
-                let filteredPoints = filterPointsForLabels(fromPoints: activatedPoints)
                 updateLabels(deactivatedPoints: filteredPoints, activatedPoints: filteredPoints)
             }
         }
+
+        updatePlotLabels(deactivatedPoints: filteredPoints, activatedPoints: filteredPoints)
     }
     
     private func repositionActiveLabels() {

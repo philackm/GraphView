@@ -22,8 +22,11 @@ internal class GraphPoint {
             location.y = newValue
         }
     }
+
+    var originalPoint: CGPoint
     
     init(position: CGPoint = CGPoint.zero) {
+        originalPoint = position
         x = position.x
         y = position.y
     }
