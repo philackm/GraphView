@@ -106,7 +106,10 @@ internal class ReferenceLineDrawingView : UIView {
         numberFormatter.numberStyle = self.settings.referenceLineNumberStyle
         numberFormatter.minimumFractionDigits = self.settings.referenceLineNumberOfDecimalPlaces
         numberFormatter.maximumFractionDigits = self.settings.referenceLineNumberOfDecimalPlaces
-        
+        if let currencyCode = self.settings.currencyCode, let currencySymbol = self.settings.currencySymbol{
+            numberFormatter.currencyCode = currencyCode
+            numberFormatter.currencySymbol = currencySymbol
+        }
         return numberFormatter
     }
     

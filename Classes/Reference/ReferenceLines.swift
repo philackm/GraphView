@@ -51,7 +51,10 @@ open class ReferenceLines {
     @IBInspectable open var referenceLineNumberOfDecimalPlaces: Int = 0
     /// The NSNumberFormatterStyle that reference lines should use to display
     @IBInspectable open var referenceLineNumberStyle: NumberFormatter.Style = .none
-    
+    /// The default currency of the referenceLineNumberStyle
+    @IBInspectable open var currencyCode: String?
+    /// The default currency symbol of the referenceLineNumberStyle
+    @IBInspectable open var currencySymbol: String?
     // Data Point Labels // TODO: Refactor these into their own settings and allow for more label options (positioning)
     // ################################################################################################################
     
