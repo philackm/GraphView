@@ -5,9 +5,13 @@ internal class LineDrawingLayer : ScrollableGraphViewDrawingLayer {
     
     private var currentLinePath = UIBezierPath()
     
-    private var lineStyle: ScrollableGraphViewLineStyle
-    private var shouldFill: Bool
-    private var lineCurviness: CGFloat
+    private var lineStyle: ScrollableGraphViewLineStyle!
+    private var shouldFill: Bool!
+    private var lineCurviness: CGFloat!
+	
+    override init(layer: Any) {
+        super.init(layer: layer)
+    }
     
     init(frame: CGRect, lineWidth: CGFloat, lineColor: UIColor, lineStyle: ScrollableGraphViewLineStyle, lineJoin: String, lineCap: String, shouldFill: Bool, lineCurviness: CGFloat) {
         
