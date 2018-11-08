@@ -17,6 +17,10 @@ internal class ScrollableGraphViewDrawingLayer : CAShapeLayer {
     
     var active = true
     
+    override init(layer: Any) {
+        super.init()
+    }
+    
     init(viewportWidth: CGFloat, viewportHeight: CGFloat, offset: CGFloat = 0) {
         super.init()
         
