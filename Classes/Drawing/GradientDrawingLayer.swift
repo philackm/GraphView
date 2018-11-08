@@ -65,10 +65,12 @@ internal class GradientDrawingLayer : ScrollableGraphViewDrawingLayer {
         let endRadius: CGFloat = self.bounds.width
         
         switch(gradientType) {
-        case .linear:
+        case .linear?:
             ctx.drawLinearGradient(gradient!, start: topCentre, end: bottomCentre, options: .drawsAfterEndLocation)
-        case .radial:
+        case .radial?:
             ctx.drawRadialGradient(gradient!, startCenter: topCentre, startRadius: startRadius, endCenter: topCentre, endRadius: endRadius, options: .drawsAfterEndLocation)
+        default:
+            fatalError("Unknown type of gradient.")
         }
     }
 }
