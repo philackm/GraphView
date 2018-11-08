@@ -9,6 +9,10 @@ internal class DotDrawingLayer: ScrollableGraphViewDrawingLayer {
     
     private var customDataPointPath: ((_ centre: CGPoint) -> UIBezierPath)?
     
+    override init(layer: Any) {
+        super.init(layer: layer)
+    }
+    
     init(frame: CGRect, fillColor: UIColor, dataPointType: ScrollableGraphViewDataPointType, dataPointSize: CGFloat, customDataPointPath: ((_ centre: CGPoint) -> UIBezierPath)? = nil) {
         
         self.dataPointType = dataPointType

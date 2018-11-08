@@ -3,13 +3,13 @@ import UIKit
 
 internal class GradientDrawingLayer : ScrollableGraphViewDrawingLayer {
     
-    private var startColor: UIColor
-    private var endColor: UIColor
-    private var gradientType: ScrollableGraphViewGradientType
+    private var startColor: UIColor!
+    private var endColor: UIColor!
+    private var gradientType: ScrollableGraphViewGradientType!
     
     // Gradient fills are only used with lineplots and we need 
     // to know what the line looks like.
-    private var lineDrawingLayer: LineDrawingLayer
+    private var lineDrawingLayer: LineDrawingLayer!
     
     lazy private var gradientMask: CAShapeLayer = ({
         let mask = CAShapeLayer()
@@ -20,6 +20,10 @@ internal class GradientDrawingLayer : ScrollableGraphViewDrawingLayer {
         
         return mask
     })()
+	
+    override init(layer: Any) {
+        super.init(layer: layer)
+    }
     
     init(frame: CGRect, startColor: UIColor, endColor: UIColor, gradientType: ScrollableGraphViewGradientType, lineJoin: String = convertFromCAShapeLayerLineJoin(CAShapeLayerLineJoin.round), lineDrawingLayer: LineDrawingLayer) {
         self.startColor = startColor
@@ -61,10 +65,12 @@ internal class GradientDrawingLayer : ScrollableGraphViewDrawingLayer {
         let endRadius: CGFloat = self.bounds.width
         
         switch(gradientType) {
-        case .linear:
+        case .linear?:
             ctx.drawLinearGradient(gradient!, start: topCentre, end: bottomCentre, options: .drawsAfterEndLocation)
-        case .radial:
+        case .radial?:
             ctx.drawRadialGradient(gradient!, startCenter: topCentre, startRadius: startRadius, endCenter: topCentre, endRadius: endRadius, options: .drawsAfterEndLocation)
+        default:
+            fatalError("Unknown type of gradient.")
         }
     }
 }
