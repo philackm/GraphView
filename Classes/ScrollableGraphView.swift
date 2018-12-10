@@ -659,7 +659,7 @@ import UIKit
         }
     }
     
-    private func getData(forPlot plot: Plot, andActiveInterval activeInterval: CountableRange<Int>) -> [Double] {
+    private func getData<T: BidirectionalCollection>(forPlot plot: Plot, andActiveInterval activeInterval: T) -> [Double] where T.Index == Int, T.Element == Int {
         
         var dataForInterval = [Double]()
         
@@ -782,10 +782,19 @@ import UIKit
                 pointsToAnimate = activePointsInterval
             }
         #endif
-        
+
         for plot in plots {
-            let dataForPointsToAnimate = getData(forPlot: plot, andActiveInterval: pointsToAnimate)
-            plot.startAnimations(forPoints: pointsToAnimate, withData: dataForPointsToAnimate, withStaggerValue: stagger)
+
+            switch direction {
+            case .leftToRight:
+                let dataForPointsToAnimate = getData(forPlot: plot, andActiveInterval: pointsToAnimate)
+                plot.startAnimations(forPoints: pointsToAnimate, withData: dataForPointsToAnimate, withStaggerValue: stagger)
+
+            case .rightToLeft:
+                let dataForPointsToAnimate = getData(forPlot: plot, andActiveInterval: pointsToAnimate.reversed())
+                plot.startAnimations(forPoints: pointsToAnimate.reversed(), withData: dataForPointsToAnimate, withStaggerValue: stagger)
+            }
+
         }
     }
     

@@ -141,7 +141,7 @@ open class Plot {
         return dt
     }
     
-    internal func startAnimations(forPoints pointsToAnimate: CountableRange<Int>, withData data: [Double], withStaggerValue stagger: Double) {
+    internal func startAnimations<T: BidirectionalCollection>(forPoints pointsToAnimate: T, withData data: [Double], withStaggerValue stagger: Double) where T.Element == Int  {
         
         animatePlotPointPositions(forPoints: pointsToAnimate, withData: data, withDelay: stagger)
     }
@@ -196,7 +196,7 @@ open class Plot {
     // When the range changes, we need to set the position for any VISIBLE points, either animating or setting directly
     // depending on the settings.
     // Needs to be called when the range has changed.
-    internal func animatePlotPointPositions(forPoints pointsToAnimate: CountableRange<Int>, withData data: [Double], withDelay delay: Double) {
+    internal func animatePlotPointPositions<T: BidirectionalCollection>(forPoints pointsToAnimate: T, withData data: [Double], withDelay delay: Double) where T.Element == Int {
         // For any visible points, kickoff the animation to their new position after the axis' min/max has changed.
         var dataIndex = 0
         for pointIndex in pointsToAnimate {
