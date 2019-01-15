@@ -38,6 +38,12 @@ open class LinePlot : Plot {
     
     /// Specifies whether or not the plotted graph should be filled with a colour or gradient.
     open var shouldFill: Bool = false
+
+    /// Specifies whether or not the plotted graph should be started at zero position.
+    open var shouldStartAtZero: Bool = true
+
+    /// Specifies whether or not the plotted graph should be ended at zero position.
+    open var shouldEndAtZero: Bool = true
     
     var fillType_: Int {
         get { return fillType.rawValue }
@@ -92,7 +98,7 @@ open class LinePlot : Plot {
     private func createLayers(viewport: CGRect) {
         
         // Create the line drawing layer.
-        lineLayer = LineDrawingLayer(frame: viewport, lineWidth: lineWidth, lineColor: lineColor, lineStyle: lineStyle, lineJoin: lineJoin, lineCap: lineCap, shouldFill: shouldFill, lineCurviness: lineCurviness)
+        lineLayer = LineDrawingLayer(frame: viewport, lineWidth: lineWidth, lineColor: lineColor, lineStyle: lineStyle, lineJoin: lineJoin, lineCap: lineCap, shouldFill: shouldFill, shouldStartAtZero: shouldStartAtZero, shouldEndAtZero: shouldEndAtZero, lineCurviness: lineCurviness)
         
         // Depending on whether we want to fill with solid or gradient, create the layer accordingly.
         

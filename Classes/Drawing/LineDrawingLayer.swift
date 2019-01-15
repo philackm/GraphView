@@ -7,12 +7,16 @@ internal class LineDrawingLayer : ScrollableGraphViewDrawingLayer {
     
     private var lineStyle: ScrollableGraphViewLineStyle
     private var shouldFill: Bool
+    private var shouldStartAtZero: Bool
+    private var shouldEndAtZero: Bool
     private var lineCurviness: CGFloat
     
-    init(frame: CGRect, lineWidth: CGFloat, lineColor: UIColor, lineStyle: ScrollableGraphViewLineStyle, lineJoin: String, lineCap: String, shouldFill: Bool, lineCurviness: CGFloat) {
+    init(frame: CGRect, lineWidth: CGFloat, lineColor: UIColor, lineStyle: ScrollableGraphViewLineStyle, lineJoin: String, lineCap: String, shouldFill: Bool, shouldStartAtZero: Bool, shouldEndAtZero: Bool, lineCurviness: CGFloat) {
         
         self.lineStyle = lineStyle
         self.shouldFill = shouldFill
+        self.shouldStartAtZero = shouldStartAtZero
+        self.shouldEndAtZero = shouldEndAtZero
         self.lineCurviness = lineCurviness
         
         super.init(viewportWidth: frame.size.width, viewportHeight: frame.size.height)
@@ -61,9 +65,10 @@ internal class LineDrawingLayer : ScrollableGraphViewDrawingLayer {
         if(shouldFill) {
             // Add a line from the base of the graph to the first data point.
             let firstDataPoint = owner.graphPoint(forIndex: activePointsInterval.lowerBound)
-            
-            let viewportLeftZero = CGPoint(x: firstDataPoint.location.x - (pointPadding.leftmostPointPadding), y: zeroYPosition)
-            let leftFarEdgeTop = CGPoint(x: firstDataPoint.location.x - (pointPadding.leftmostPointPadding + viewportWidth), y: zeroYPosition)
+            let leftYPosition: CGFloat = shouldStartAtZero ? zeroYPosition : firstDataPoint.y
+
+            let viewportLeftZero = CGPoint(x: firstDataPoint.location.x - (pointPadding.leftmostPointPadding), y: leftYPosition)
+            let leftFarEdgeTop = CGPoint(x: firstDataPoint.location.x - (pointPadding.leftmostPointPadding + viewportWidth), y: leftYPosition)
             let leftFarEdgeBottom = CGPoint(x: firstDataPoint.location.x - (pointPadding.leftmostPointPadding + viewportWidth), y: viewportHeight)
             
             currentLinePath.move(to: leftFarEdgeBottom)
@@ -89,9 +94,10 @@ internal class LineDrawingLayer : ScrollableGraphViewDrawingLayer {
         if(shouldFill) {
             // Add a line from the last data point to the base of the graph.
             let lastDataPoint = owner.graphPoint(forIndex: activePointsInterval.upperBound - 1).location
+            let rightYPosition: CGFloat = shouldEndAtZero ? zeroYPosition : lastDataPoint.y
             
-            let viewportRightZero = CGPoint(x: lastDataPoint.x + (pointPadding.rightmostPointPadding), y: zeroYPosition)
-            let rightFarEdgeTop = CGPoint(x: lastDataPoint.x + (pointPadding.rightmostPointPadding + viewportWidth), y: zeroYPosition)
+            let viewportRightZero = CGPoint(x: lastDataPoint.x + (pointPadding.rightmostPointPadding), y: rightYPosition)
+            let rightFarEdgeTop = CGPoint(x: lastDataPoint.x + (pointPadding.rightmostPointPadding + viewportWidth), y: rightYPosition)
             let rightFarEdgeBottom = CGPoint(x: lastDataPoint.x + (pointPadding.rightmostPointPadding + viewportWidth), y: viewportHeight)
             
             pathSegmentAdder(lastDataPoint, viewportRightZero, currentLinePath)
