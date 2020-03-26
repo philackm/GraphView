@@ -29,7 +29,7 @@ internal class LabelPool {
         else {
             label = UILabel()
             labels.append(label)
-            let newLabelIndex = labels.index(of: label)!
+            let newLabelIndex = labels.firstIndex(of: label)!
             relations[pointIndex] = newLabelIndex
         }
         
