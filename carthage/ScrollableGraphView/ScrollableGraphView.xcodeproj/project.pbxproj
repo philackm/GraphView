@@ -198,16 +198,18 @@
 				TargetAttributes = {
 					298BFD251F121BA10062F5C8 = {
 						CreatedOnToolsVersion = 8.3.3;
+						LastSwiftMigration = 1140;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
 			buildConfigurationList = 298BFD201F121BA10062F5C8 /* Build configuration list for PBXProject "ScrollableGraphView" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 298BFD1C1F121BA10062F5C8;
 			productRefGroup = 298BFD271F121BA10062F5C8 /* Products */;
@@ -389,7 +391,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = SGV.ScrollableGraphView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -407,7 +409,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = SGV.ScrollableGraphView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
