@@ -8,6 +8,9 @@ internal class BarDrawingLayer: ScrollableGraphViewDrawingLayer {
     private var barWidth: CGFloat = 4
     private var shouldRoundCorners = false
     
+    override init(layer: Any) {
+        super.init(layer: layer)
+    }
     init(frame: CGRect, barWidth: CGFloat, barColor: UIColor, barLineWidth: CGFloat, barLineColor: UIColor, shouldRoundCorners: Bool) {
         super.init(viewportWidth: frame.size.width, viewportHeight: frame.size.height)
         

@@ -26,9 +26,17 @@ open class ReferenceLines {
     open var referenceLinePosition = ScrollableGraphViewReferenceLinePosition.left
     
     @IBInspectable open var positionType = ReferenceLinePositioningType.relative
-    @IBInspectable open var relativePositions: [Double] = [0.25, 0.5, 0.75]
-    @IBInspectable open var absolutePositions: [Double] = [25, 50, 75]
-    @IBInspectable open var includeMinMax: Bool = true
+    
+    open var relativeLines: [ReferenceLine] = [ReferenceLine(position: 0, label: "start"),
+                                               ReferenceLine(position: 0.25, label: "a"),
+                                               ReferenceLine(position: 0.5, label: "b"),
+                                               ReferenceLine(position: 0.75, label: "c"),
+                                               ReferenceLine(position: 1, label: "end")]
+    open var absoluteLines: [ReferenceLine] = [ReferenceLine(position: 25),
+                                               ReferenceLine(position: 50),
+                                               ReferenceLine(position: 75)]
+
+    @IBInspectable open var includeMinMax: Bool = false
     
     /// Whether or not to add labels to the intermediate reference lines.
     @IBInspectable open var shouldAddLabelsToIntermediateReferenceLines: Bool = true
@@ -72,7 +80,14 @@ open class ReferenceLines {
         // Need this for external frameworks.
     }
 }
-
+open class ReferenceLine {
+    public let position: Double
+    public let label: String?
+    public init(position: Double, label: String? = nil) {
+        self.position = position
+        self.label = label
+    }
+}
 
 @objc public enum ScrollableGraphViewReferenceLinePosition : Int {
     case left

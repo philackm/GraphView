@@ -5,8 +5,11 @@ internal class FillDrawingLayer : ScrollableGraphViewDrawingLayer {
     
     // Fills are only used with lineplots and we need
     // to know what the line looks like.
-    private var lineDrawingLayer: LineDrawingLayer
+    private var lineDrawingLayer: LineDrawingLayer!
     
+    override init(layer: Any) {
+        super.init(layer: layer)
+    }
     init(frame: CGRect, fillColor: UIColor, lineDrawingLayer: LineDrawingLayer) {
         
         self.lineDrawingLayer = lineDrawingLayer

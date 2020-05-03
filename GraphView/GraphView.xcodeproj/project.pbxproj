@@ -287,13 +287,16 @@
 				TargetAttributes = {
 					2918399D1C72E6A400753A45 = {
 						CreatedOnToolsVersion = 7.2.1;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1130;
+					};
+					E10847832129DC60009A9586 = {
+						LastSwiftMigration = 1130;
 					};
 				};
 			};
 			buildConfigurationList = 291839991C72E6A400753A45 /* Build configuration list for PBXProject "GraphView" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -512,7 +515,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ios.GraphViewCode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -529,7 +532,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ios.GraphViewCode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -546,7 +549,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ios.GraphViewIB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -563,7 +567,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ios.GraphViewIB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

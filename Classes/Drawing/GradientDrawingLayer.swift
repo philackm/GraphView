@@ -9,7 +9,7 @@ internal class GradientDrawingLayer : ScrollableGraphViewDrawingLayer {
     
     // Gradient fills are only used with lineplots and we need 
     // to know what the line looks like.
-    private var lineDrawingLayer: LineDrawingLayer
+    private var lineDrawingLayer: LineDrawingLayer!
     
     lazy private var gradientMask: CAShapeLayer = ({
         let mask = CAShapeLayer()
@@ -33,6 +33,12 @@ internal class GradientDrawingLayer : ScrollableGraphViewDrawingLayer {
         
         addMaskLayer()
         self.setNeedsDisplay()
+    }
+    override init(layer: Any) {
+        self.startColor = UIColor.black
+        self.endColor = UIColor.black
+        self.gradientType = .linear
+        super.init(layer: layer)
     }
     
     required init?(coder aDecoder: NSCoder) {

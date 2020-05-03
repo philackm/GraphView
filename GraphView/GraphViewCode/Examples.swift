@@ -141,7 +141,12 @@ class Examples : ScrollableGraphViewDataSource {
         referenceLines.referenceLineLabelFont = UIFont.boldSystemFont(ofSize: 8)
         referenceLines.referenceLineColor = UIColor.white.withAlphaComponent(0.2)
         referenceLines.referenceLineLabelColor = UIColor.white
-        referenceLines.relativePositions = [0, 0.2, 0.4, 0.6, 0.8, 1]
+        referenceLines.relativeLines = [ReferenceLine(position: 0),
+                                        ReferenceLine(position: 0.2),
+                                        ReferenceLine(position: 0.4),
+                                        ReferenceLine(position: 0.6),
+                                        ReferenceLine(position: 0.8),
+                                        ReferenceLine(position: 1)]
         
         referenceLines.dataPointLabelColor = UIColor.white.withAlphaComponent(1)
         
@@ -257,7 +262,10 @@ class Examples : ScrollableGraphViewDataSource {
         
         referenceLines.positionType = .absolute
         // Reference lines will be shown at these values on the y-axis.
-        referenceLines.absolutePositions = [10, 20, 25, 30]
+        referenceLines.absoluteLines = [ReferenceLine(position: 10),
+                                        ReferenceLine(position: 20),
+                                        ReferenceLine(position: 25),
+                                        ReferenceLine(position: 30)]
         referenceLines.includeMinMax = false
         
         referenceLines.dataPointLabelColor = UIColor.white.withAlphaComponent(0.5)

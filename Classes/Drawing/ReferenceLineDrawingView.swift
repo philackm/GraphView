@@ -93,9 +93,9 @@ internal class ReferenceLineDrawingView : UIView {
         
         switch(settings.positionType) {
         case .relative:
-            createReferenceLines(in: initialRect, atRelativePositions: self.settings.relativePositions, forPath: referenceLinePath)
+            createReferenceLines(in: initialRect, relativeLines: self.settings.relativeLines, forPath: referenceLinePath)
         case .absolute:
-            createReferenceLines(in: initialRect, atAbsolutePositions: self.settings.absolutePositions, forPath: referenceLinePath)
+            createReferenceLines(in: initialRect, absoluteLines: self.settings.absoluteLines, forPath: referenceLinePath)
         }
         
         return referenceLinePath
@@ -110,54 +110,61 @@ internal class ReferenceLineDrawingView : UIView {
         return numberFormatter
     }
     
-    private func createReferenceLines(in rect: CGRect, atRelativePositions relativePositions: [Double], forPath path: UIBezierPath) {
+    private func createReferenceLines(in rect: CGRect, relativeLines: [ReferenceLine], forPath path: UIBezierPath) {
         
         let height = rect.size.height
-        var relativePositions = relativePositions
+        var relativeLines = relativeLines
         
         // If we are including the min and max already need to make sure we don't redraw them.
         if(self.settings.includeMinMax) {
-            relativePositions = relativePositions.filter({ (x:Double) -> Bool in
-                return (x != 0 && x != 1)
+            relativeLines = relativeLines.filter({ (x: ReferenceLine) -> Bool in
+                return (x.position != 0 && x.position != 1)
             })
         }
         
-        for relativePosition in relativePositions {
+        for relativeLine in relativeLines {
             
-            let yPosition = height * CGFloat(1 - relativePosition)
+            let yPosition = height * CGFloat(1 - relativeLine.position)
             
             let lineStart = CGPoint(x: 0, y: rect.origin.y + yPosition)
             let lineEnd = CGPoint(x: lineStart.x + lineWidth, y: lineStart.y)
             
-            createReferenceLineFrom(from: lineStart, to: lineEnd, in: path)
+            createReferenceLineFrom(from: lineStart, to: lineEnd, in: path, withLabel: relativeLine.label)
         }
     }
     
-    private func createReferenceLines(in rect: CGRect, atAbsolutePositions absolutePositions: [Double], forPath path: UIBezierPath) {
+    private func createReferenceLines(in rect: CGRect, absoluteLines: [ReferenceLine], forPath path: UIBezierPath) {
         
-        for absolutePosition in absolutePositions {
+        for absoluteLine in absoluteLines {
             
-            let yPosition = calculateYPositionForYAxisValue(value: absolutePosition)
+            let yPosition = calculateYPositionForYAxisValue(value: absoluteLine.position)
             
-            // don't need to add rect.origin.y to yPosition like we do for relativePositions,
+            // don't need to add rect.origin.y to yPosition like we do for relativeLines,
             // as we calculate the position for the y axis value in the previous line,
             // this already takes into account margins, etc.
             let lineStart = CGPoint(x: 0, y: yPosition)
             let lineEnd = CGPoint(x: lineStart.x + lineWidth, y: lineStart.y)
             
-            createReferenceLineFrom(from: lineStart, to: lineEnd, in: path)
+            createReferenceLineFrom(from: lineStart, to: lineEnd, in: path, withLabel: absoluteLine.label)
         }
     }
     
-    private func createReferenceLineFrom(from lineStart: CGPoint, to lineEnd: CGPoint, in path: UIBezierPath) {
+    private func createReferenceLineFrom(from lineStart: CGPoint, to lineEnd: CGPoint, in path: UIBezierPath, withLabel label: String?) {
         if(self.settings.shouldAddLabelsToIntermediateReferenceLines) {
             
             let value = calculateYAxisValue(for: lineStart)
             let numberFormatter = referenceNumberFormatter()
-            var valueString = numberFormatter.string(from: value as NSNumber)!
             
-            if(self.settings.shouldAddUnitsToIntermediateReferenceLineLabels) {
-                valueString += " \(units)"
+            var valueString: String
+            
+            if let label = label {
+                valueString = label
+            } else {
+                valueString = numberFormatter.string(from: value as NSNumber)!
+                
+                if(self.settings.shouldAddUnitsToIntermediateReferenceLineLabels) {
+                    valueString += " \(units)"
+                }
             }
             
             addLine(withTag: valueString, from: lineStart, to: lineEnd, in: path)

@@ -30,7 +30,13 @@ internal class LineDrawingLayer : ScrollableGraphViewDrawingLayer {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+    override init(layer: Any) {
+        // Default values
+        lineStyle = .smooth
+        shouldFill = false
+        lineCurviness = 1.0
+        super.init(layer: layer)
+    }
     internal func createLinePath() -> UIBezierPath {
         
         guard let owner = owner else {
