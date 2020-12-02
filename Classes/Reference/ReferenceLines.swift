@@ -63,6 +63,7 @@ open class ReferenceLines {
     @IBInspectable open var dataPointLabelBottomMargin: CGFloat = 0
     /// The font for the data point labels.
     @IBInspectable open var dataPointLabelColor: UIColor = UIColor.black
+    @IBInspectable open var unitsAligment: UnitsAligment = .right
     /// The colour for the data point labels.
     open var dataPointLabelFont: UIFont? = UIFont.systemFont(ofSize: 10)
     /// Used to force the graph to show every n-th dataPoint label
@@ -87,4 +88,9 @@ open class ReferenceLines {
 
 @objc public enum ScrollableGraphViewReferenceLineType : Int {
     case cover
+}
+
+
+@objc public enum UnitsAligment: Int {
+    case left, right
 }
